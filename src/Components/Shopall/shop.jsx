@@ -1,13 +1,16 @@
-// src/components/Shopall/shop.jsx
-import React, { useContext } from "react";
-import { Link, useParams } from "react-router-dom";
-import Navbar from "../Navbar/navbar";
+import React, { useState, useContext } from "react";
+import { useParams } from "react-router-dom";
+import StoreNavigation from '../StoreNavigation/StoreNavigation';
+import ProductCard from '../ProductCard/ProductCard';
 import { ProductContext } from "../../context/productContext";
-import "./shop.css";
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import '../Home/home.css';
 
 const AllProducts = () => {
   const { collectionId } = useParams();
   const { products, loading } = useContext(ProductContext);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const categoryMap = {
     "custom-wear": ["customnative", "zuchclassics"],
@@ -24,83 +27,47 @@ const AllProducts = () => {
     : products;
 
   if (loading) {
-    return (
-      <div className="all-products-page">
-        <Navbar />
-        <h1 className="all-products-title">
-          {collectionId
-            ? `${collectionId
-                .replace(/-/g, " ")
-                .replace(/\b\w/g, c => c.toUpperCase())}`
-            : "All Products"}
-        </h1>
-        <div className="products-grid">
-          {[...Array(6)].map((_, index) => (
-            <div key={index} className="skeleton-product">
-              <div className="skeleton-image"></div>
-              <div className="skeleton-info">
-                <div className="skeleton-name"></div>
-                <div className="skeleton-price"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <div className="home-loading">Loading products...</div>;
   }
 
   return (
-    <div className="all-products-page">
-      <Navbar />
-      <h1 className="all-products-title">
-        {collectionId
-          ? `${collectionId
-              .replace(/-/g, " ")
-              .replace(/\b\w/g, c => c.toUpperCase())}`
-          : "All Products"}
-      </h1>
-      <div className="products-grid">
-        {filteredProducts.length === 0 ? (
-          <p className="no-products">No products available.</p>
-        ) : (
-          filteredProducts.map(item => {
-            const slashedPrice = item.price * 1.2; // 20% higher
-            return (
-              <Link
-                key={`${item.collectionId}-${item.id}`}
-                to={`/product/${item.collectionId}/${item.id}`}
-                className="product-item"
-              >
-                <img
-                  src={item.imageUrl || "https://placehold.co/300"}
-                  alt={item.name}
-                  className="product-img"
-                  loading="lazy"
-                  decoding="async"
-                  onError={e => {
-                    e.target.src = "https://placehold.co/300";
-                  }}
-                />
-                <div className="product-info">
-                  <h2 className="product-name">{item.name}</h2>
-                  <p className="product-price">
-                    <span className="slashed-price">
-                      ₦{slashedPrice.toLocaleString("en-NG", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </span>
-                    <span className="current-price">
-                      ₦{item.price.toLocaleString("en-NG", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </span>
-                  </p>
-                </div>
-              </Link>
-            );
-          })
-        )}
-      </div>
+    <div className="home-container">
+      <aside className="sidebar">
+        <StoreNavigation />
+      </aside>
+
+      {isMobileMenuOpen && (
+        <div className="mobileMenuOverlay">
+          <StoreNavigation />
+        </div>
+      )}
+
+      <button
+        className="mobileMenuButton"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle Menu"
+      >
+        {isMobileMenuOpen ? <CloseOutlinedIcon /> : <MenuOutlinedIcon />}
+      </button>
+
+      <main className="mainContent">
+        <div className="productGrid">
+          {filteredProducts.length === 0 ? (
+            <p>No products available.</p>
+          ) : (
+            filteredProducts.map((product) => (
+              <ProductCard
+                key={`${product.collectionId}-${product.id}`}
+                id={product.id}
+                collectionId={product.collectionId}
+                name={product.name}
+                price={product.price}
+                imageUrl={product.imageUrl}
+              />
+            ))
+          )}
+        </div>
+      </main>
     </div>
   );
 };

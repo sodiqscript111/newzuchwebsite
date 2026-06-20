@@ -1,342 +1,306 @@
-/* product.css */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-
-/* Container */
 .product-detail-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 1480px;
-  margin: 4rem auto;
-  padding: 0 1rem;
-  gap: 2.5rem;
-  background: #ffffff;
-}
-/* src/components/Product/product.css */
-
-/* ... (existing styles remain unchanged) */
-
-.appointment-section {
-  margin-top: 1rem;
-  text-align: center;
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+    font-family: var(--font-space-mono);
+    color: #000;
 }
 
-.appointment-section p {
-  font-size: 1rem;
-  color: #8b949e;
-  margin-bottom: 1rem;
+.gallerySection {
+    width: 50%;
+    height: 100%;
+    overflow-y: auto;
 }
 
-.book-appointment-button {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  background: #58a6ff;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+.infoSection {
+    width: 50%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 2rem;
 }
 
-.book-appointment-button:hover {
-  background: #1a73e8;
-  transform: translateY(-2px);
+/* Hide scrollbars for a cleaner Validation aesthetic */
+.gallerySection::-webkit-scrollbar,
+.infoSection::-webkit-scrollbar {
+    display: none;
 }
-/* Image Slider */
-.product-detail-image {
-  width: 100%;
-  max-width: 600px;
-  height: auto;
+.gallerySection {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
-
-.product-image-slider {
-  width: 100%;
-  height: 500px;
+.infoSection {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-.swiper-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 12px;
+.galleryContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 0;
 }
 
-/* No Image Placeholder */
+.imageWrapper {
+    position: relative;
+    width: 70%;
+    max-width: 500px;
+    margin-bottom: 2rem;
+    aspect-ratio: 3/4;
+    border: 0.5px solid #000;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .no-image-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0f0f0;
-  color: #666;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  border-radius: 12px;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    text-transform: uppercase;
+    border-right: 0.5px solid #000;
 }
 
-/* Swiper Navigation */
-.swiper-button-next,
-.swiper-button-prev {
-  color: #000000;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
+.product-info-header {
+    margin-bottom: 2rem;
+    border-bottom: 0.5px solid #000;
+    padding-bottom: 1rem;
 }
 
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-  background-color: #ffffff;
+.name {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
 }
 
-.swiper-pagination-bullet {
-  background: #666;
+.price {
+    font-size: 1.25rem;
+    color: #666;
 }
 
-.swiper-pagination-bullet-active {
-  background: #000000;
+.description {
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-size: 0.875rem;
 }
 
-/* Info Section */
-.product-detail-info {
-  width: 100%;
-  max-width: 600px;
-  padding: 1rem 0;
-  text-align: center;
+.section {
+    margin-bottom: 2rem;
 }
 
-.product-detail-info h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: #000000;
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.02em;
-}
-
-.product-detail-info p {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem;
-  color: #000000;
-  margin-bottom: 1.5rem;
-}
-
-/* Size Selection */
-.size-selection label {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  color: #000000;
-  margin-bottom: 0.75rem;
-  display: block;
+.sectionTitle {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-weight: 700;
 }
 
 .size-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .toggle-button {
-  padding: 0.75rem 1.5rem;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
-  border: 1px solid #000000;
-  background: #ffffff;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    border: 0.5px solid #000;
+    background: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    transition: all 0.2s;
 }
 
 .toggle-button.active {
-  background-color: #000000;
-  color: #ffffff;
-  border-color: #000000;
+    background-color: #000;
+    color: #fff;
 }
 
 .toggle-button:hover:not(.active) {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
-/* Standard Sizes */
-.standard-sizes label,
-.custom-sizes label {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  color: #000000;
-  margin-bottom: 0.75rem;
-  display: block;
+.sizeGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 2rem;
 }
 
-.size-options {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+.sizeButton {
+    padding: 0.75rem;
+    background: #fff;
+    border: 0.5px solid #000;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    transition: all 0.2s;
 }
 
-.size-button {
-  padding: 0.75rem 1.5rem;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
-  border: 1px solid #000000;
-  background: #ffffff;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+.sizeButton:hover {
+    background: #f0f0f0;
 }
 
-.size-button.selected {
-  background-color: #000000;
-  color: #ffffff;
-  border-color: #000000;
+.sizeButton.selected {
+    background: #000;
+    color: #fff;
 }
 
-.size-button:hover:not(.selected) {
-  background-color: #f0f0f0;
-}
-
-/* Custom Sizes */
 .custom-size-inputs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
-  justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 .custom-size-inputs input {
-  padding: 0.75rem;
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem;
-  border: 1px solid #000000;
-  border-radius: 6px;
-  width: 100%;
-  text-align: center;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    border: 0.5px solid #000;
+    width: 100%;
+    text-transform: uppercase;
 }
 
-/* Add to Cart Button */
-.add-to-cart-button {
-  margin-top: 2.5rem;
-  padding: 0.8rem 2rem;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  font-weight: 600;
-  background-color: #000000;
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+.actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
 }
 
-.add-to-cart-button:hover {
-  background-color: #333333;
-  transform: scale(1.03);
+.button {
+    flex: 1;
+    padding: 1rem;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-/* Image Modal */
-.image-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8); /* Dark overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+.buyButton {
+    background: #fff;
+    border: 0.5px solid #000;
+    color: #000;
 }
 
-.image-modal {
-  position: relative;
-  max-width: 90%;
-  max-height: 90vh;
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
+.buyButton:hover {
+    background: #000;
+    color: #fff;
 }
 
-.enlarged-image {
-  width: 100%;
-  height: auto;
-  max-height: 80vh; /* Limit height to fit screen */
-  object-fit: contain;
+.cartButton {
+    background: #000;
+    border: 0.5px solid #000;
+    color: #fff;
 }
 
-.close-modal-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 36px;
-  height: 36px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #000000;
-  background: #ffffff;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
+.cartButton:hover {
+    background: #fff;
+    color: #000;
 }
 
-.close-modal-btn:hover {
-  background-color: #f0f0f0;
+.appointment-section {
+    margin-top: 1rem;
+    padding-top: 2rem;
+    border-top: 0.5px solid #000;
 }
 
-/* Responsive */
+.appointment-text {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.book-appointment-button {
+    padding: 1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    background: #fff;
+    color: #000;
+    border: 0.5px solid #000;
+    cursor: pointer;
+    text-transform: uppercase;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.book-appointment-button:hover {
+    background: #000;
+    color: #fff;
+}
+
+.product-loading, .product-error {
+    padding: 2rem;
+    font-family: var(--font-space-mono);
+    text-transform: uppercase;
+}
+
+.notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: 0.5px solid #000;
+    padding: 1rem 2rem;
+    z-index: 1000;
+    text-transform: uppercase;
+    font-weight: 700;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
 @media (max-width: 768px) {
-  .product-detail-container {
-    padding: 2rem 0;
-    gap: 2rem;
-  }
+    .product-detail-container {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+    }
 
-  .product-image-slider {
-    height: 400px;
-  }
+    .gallerySection {
+        width: 100%;
+        height: 55vh;
+        overflow-y: auto;
+    }
 
-  .product-detail-info h1 {
-    font-size: 2rem;
-  }
+    .imageWrapper {
+        border-right: none;
+    }
 
-  .product-detail-info p {
-    font-size: 1.1rem;
-  }
+    .infoSection {
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+    }
 
-  .size-selection label,
-  .standard-sizes label,
-  .custom-sizes label {
-    font-size: 1.2rem;
-  }
+    .actions {
+        flex-direction: column;
+    }
 
-  .toggle-button,
-  .size-button {
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-  }
-
-  .add-to-cart-button {
-    padding: 0.7rem 1.5rem;
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .product-image-slider {
-    height: 300px;
-  }
-
-  .custom-size-inputs {
-    grid-template-columns: 1fr;
-  }
-
-  .product-detail-info h1 {
-    font-size: 1.8rem;
-  }
+    .custom-size-inputs {
+        grid-template-columns: 1fr;
+    }
 }

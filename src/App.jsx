@@ -15,43 +15,52 @@ import Elegant from "./Components/Elegant/elegant";
 
 import { ProductProvider } from "./context/productContext"; // Import ProductProvider
 
+import Layout from "./Components/Layout/Layout";
+
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/clothes",
-    element: <Allclothes />,
-  },
-  {
-    path: "/product/:collectionName/:id",
-    element: <ProductDetail />,
-  },
-  {
-    path: "/cart",
-    element: <Cart />,
-  },
-  {
-    path: "/shopall/:collectionId",
-    element: <Shopall />,
-  },  {
-    path: "/elegant",
-    element: <Elegant/>,
-  },
-  {
-    path: "/shopall",
-    element: <Shopall />,
-  },
-  {
-    path: "/contact",
-    element: <Contact />,
-  },
-  {
-    path: "/about",
-    element: <About />,
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/clothes",
+        element: <Allclothes />,
+      },
+      {
+        path: "/product/:collectionName/:id",
+        element: <ProductDetail />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path: "/shopall/:collectionId",
+        element: <Shopall />,
+      },
+      {
+        path: "/elegant",
+        element: <Elegant/>,
+      },
+      {
+        path: "/shopall",
+        element: <Shopall />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      }
+    ]
   }
 ]);
+
 
 function App({ user }) {
   return (

@@ -1,16 +1,9 @@
-// src/components/Product/product.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../utils/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import Navbar from '../Navbar/navbar';
-import './product.css';
 import { CartContext } from '../../context/cart';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
+import './product.css';
 
 const ProductDetail = () => {
   const { collectionName, id } = useParams();
@@ -26,7 +19,7 @@ const ProductDetail = () => {
   });
   const [selectedStandardSize, setSelectedStandardSize] = useState(null);
   const [isCustomSize, setIsCustomSize] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -37,20 +30,16 @@ const ProductDetail = () => {
           return;
         }
 
-        console.log(`🔍 Fetching product from: collections/${collectionName}/products/${id}`);
-
         const productRef = doc(db, "collections", collectionName, "products", id);
         const productSnap = await getDoc(productRef);
 
         if (!productSnap.exists()) {
-          console.warn("⚠️ Product not found:", id);
           setError("Product not found.");
           setLoading(false);
           return;
         }
 
         const data = productSnap.data();
-        console.log("🛍️ Product Data:", data);
 
         let images = [];
         if (Array.isArray(data.imageUrl)) {
@@ -60,8 +49,6 @@ const ProductDetail = () => {
         } else if (typeof data.imageUrl === 'string') {
           images = [data.imageUrl];
         }
-
-        console.log("📸 Processed Image URLs:", images);
 
         const priceRaw = data.price;
         const price = typeof priceRaw === "number" && !isNaN(priceRaw)
@@ -74,13 +61,12 @@ const ProductDetail = () => {
           id: productSnap.id,
           name: data.name || "Unknown",
           price,
-          description: data.description || "No description available",
+          description: data.description || "No description available.",
           imageUrls: images,
-          standardSizes: data.standardSizes || ["S", "M", "L", "XL", "XXL"],
+          standardSizes: data.standardSizes || ["XS", "S", "M", "L", "XL"],
         });
         setLoading(false);
       } catch (error) {
-        console.error("❌ Error fetching product:", error);
         setError("Failed to load product details.");
         setLoading(false);
       }
@@ -89,22 +75,19 @@ const ProductDetail = () => {
     fetchProduct();
   }, [collectionName, id]);
 
-  const handleImageClick = (url) => {
-    setSelectedImage(url);
-  };
-
-  const closeModal = () => {
-    setSelectedImage(null);
+  const showNotification = (msg) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
   };
 
   const handleAddToCart = () => {
     if (!isCustomSize && !selectedStandardSize) {
-      alert('Please select a standard size.');
+      showNotification('Please select a standard size.');
       return;
     }
 
     if (isCustomSize && (!customSize.chest || !customSize.waist || !customSize.hips || !customSize.length)) {
-      alert('Please fill in all custom size measurements.');
+      showNotification('Please fill in all custom measurements.');
       return;
     }
 
@@ -118,7 +101,11 @@ const ProductDetail = () => {
         size: isCustomSize ? customSize : selectedStandardSize,
       },
     });
-    alert('Product added to cart!');
+    showNotification('Added to Cart');
+  };
+
+  const handleBuyNow = () => {
+    showNotification('Purchase Feature Coming Soon!');
   };
 
   const handleCustomSizeChange = (e) => {
@@ -129,145 +116,110 @@ const ProductDetail = () => {
     }));
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!product) return <div>Product not found</div>;
+  if (loading) return <div className="product-loading">Loading...</div>;
+  if (error) return <div className="product-error">{error}</div>;
+  if (!product) return <div className="product-error">Product not found</div>;
 
   return (
-    <>
-      <Navbar />
-      <div className="product-detail-container">
-        <div className="product-detail-image">
-          <Swiper
-            modules={[Navigation, Pagination]}
-            spaceBetween={10}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            className="product-image-slider"
-          >
-            {product.imageUrls.length > 0 ? (
-              product.imageUrls.map((url, index) => (
-                <SwiperSlide key={index}>
-                  <img
-                    src={url}
-                    alt={`${product.name} ${index + 1}`}
-                    className="swiper-image"
-                    onClick={() => handleImageClick(url)}
-                    style={{ cursor: 'pointer' }}
-                  />
-                </SwiperSlide>
-              ))
-            ) : (
-              <SwiperSlide>
-                <div className="no-image-placeholder">No Images Available</div>
-              </SwiperSlide>
-            )}
-          </Swiper>
+    <div className="product-detail-container">
+      {notification && (
+        <div className="notification">
+          {notification}
         </div>
-        <div className="product-detail-info">
-          <h1>{product.name}</h1>
-          <p>{product.description}</p>
-          <p>
-            Price: <strong>₦{product.price.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
-          </p>
+      )}
 
-          {collectionName === "zuchclassics" ? (
-            <div className="appointment-section">
-              <p>This is a ZUCH Classics item. Book an appointment to customize your order.</p>
-              <a href="https://instagram.com/Zuch_Collection" target="_blank" rel="noopener noreferrer">
-                <button className="book-appointment-button">Book Appointment</button>
-              </a>
-            </div>
-          ) : (
-            <div className="product-options">
-              <div className="size-selection">
-                <label>Do you want to customize your size?</label>
-                <div className="size-toggle">
-                  <button
-                    className={`toggle-button ${!isCustomSize ? 'active' : ''}`}
-                    onClick={() => setIsCustomSize(false)}
-                  >
-                    Standard Sizes
-                  </button>
-                  <button
-                    className={`toggle-button ${isCustomSize ? 'active' : ''}`}
-                    onClick={() => setIsCustomSize(true)}
-                  >
-                    Custom Size
-                  </button>
-                </div>
+      <div className="gallerySection">
+        <div className="galleryContainer">
+          {product.imageUrls.length > 0 ? (
+            product.imageUrls.map((url, index) => (
+              <div key={index} className="imageWrapper">
+                <img
+                  src={url}
+                  alt={`${product.name} - View ${index + 1}`}
+                  className="gallery-image"
+                />
               </div>
-
-              {!isCustomSize ? (
-                <div className="standard-sizes">
-                  <label>Standard Sizes:</label>
-                  <div className="size-options">
-                    {product.standardSizes.map((size, index) => (
-                      <button
-                        key={index}
-                        className={`size-button ${selectedStandardSize === size ? 'selected' : ''}`}
-                        onClick={() => setSelectedStandardSize(size)}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="custom-sizes">
-                  <label>Custom Measurements (in cm):</label>
-                  <div className="custom-size-inputs">
-                    <input
-                      type="number"
-                      name="chest"
-                      placeholder="Chest"
-                      value={customSize.chest}
-                      onChange={handleCustomSizeChange}
-                    />
-                    <input
-                      type="number"
-                      name="waist"
-                      placeholder="Waist"
-                      value={customSize.waist}
-                      onChange={handleCustomSizeChange}
-                    />
-                    <input
-                      type="number"
-                      name="hips"
-                      placeholder="Hips"
-                      value={customSize.hips}
-                      onChange={handleCustomSizeChange}
-                    />
-                    <input
-                      type="number"
-                      name="length"
-                      placeholder="Length"
-                      value={customSize.length}
-                      onChange={handleCustomSizeChange}
-                    />
-                  </div>
-                </div>
-              )}
-
-              <button className="add-to-cart-button" onClick={handleAddToCart}>
-                Add to Cart
-              </button>
-            </div>
+            ))
+          ) : (
+            <div className="no-image-placeholder">No Images Available</div>
           )}
         </div>
       </div>
 
-      {/* Image Modal */}
-      {selectedImage && (
-        <div className="image-modal-overlay" onClick={closeModal}>
-          <div className="image-modal" onClick={(e) => e.stopPropagation()}>
-            <img src={selectedImage} alt="Enlarged product view" className="enlarged-image" />
-            <button className="close-modal-btn" onClick={closeModal}>×</button>
-          </div>
+      <div className="infoSection">
+        <div className="product-info-header">
+          <h1 className="name">{product.name}</h1>
+          <p className="price">₦{product.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</p>
         </div>
-      )}
-    </>
+
+        <div className="description">
+          <p>{product.description}</p>
+        </div>
+
+        {collectionName === "zuchclassics" ? (
+          <div className="appointment-section">
+            <h3 className="sectionTitle">Custom Order</h3>
+            <p className="appointment-text">This is a ZUCH Classics item. Book an appointment to customize your order.</p>
+            <a href="https://instagram.com/Zuch_Collection" target="_blank" rel="noopener noreferrer">
+              <button className="book-appointment-button">Book Appointment</button>
+            </a>
+          </div>
+        ) : (
+          <div className="section">
+            <div className="size-toggle">
+              <button
+                className={`toggle-button ${!isCustomSize ? 'active' : ''}`}
+                onClick={() => setIsCustomSize(false)}
+              >
+                Standard Sizes
+              </button>
+              <button
+                className={`toggle-button ${isCustomSize ? 'active' : ''}`}
+                onClick={() => setIsCustomSize(true)}
+              >
+                Custom Size
+              </button>
+            </div>
+
+            {!isCustomSize ? (
+              <>
+                <h3 className="sectionTitle">Select Size</h3>
+                <div className="sizeGrid">
+                  {product.standardSizes.map((size, index) => (
+                    <button
+                      key={index}
+                      className={`sizeButton ${selectedStandardSize === size ? 'selected' : ''}`}
+                      onClick={() => setSelectedStandardSize(size)}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="sectionTitle">Measurements (cm)</h3>
+                <div className="custom-size-inputs">
+                  <input type="number" name="chest" placeholder="Chest" value={customSize.chest} onChange={handleCustomSizeChange} />
+                  <input type="number" name="waist" placeholder="Waist" value={customSize.waist} onChange={handleCustomSizeChange} />
+                  <input type="number" name="hips" placeholder="Hips" value={customSize.hips} onChange={handleCustomSizeChange} />
+                  <input type="number" name="length" placeholder="Length" value={customSize.length} onChange={handleCustomSizeChange} />
+                </div>
+              </>
+            )}
+
+            <div className="actions">
+              <button className="button buyButton" onClick={handleBuyNow}>
+                Buy Now
+              </button>
+              <button className="button cartButton" onClick={handleAddToCart}>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

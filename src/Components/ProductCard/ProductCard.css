@@ -1,0 +1,82 @@
+.cardLink {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    font-family: var(--font-space-mono);
+    cursor: pointer;
+    border: 0.5px solid #000;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.imageContainer {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    border-bottom: 0.5px solid #000;
+}
+
+.image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.info {
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    height: 40px;
+    font-family: var(--font-space-mono);
+}
+
+.navButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prevButton {
+    left: 8px;
+}
+
+.nextButton {
+    right: 8px;
+}
+
+.card:hover .navButton {
+    opacity: 1;
+}
+
+.colorIndicator {
+    font-size: 0.7rem;
+    color: #666;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.card:hover .colorIndicator {
+    opacity: 1;
+}
