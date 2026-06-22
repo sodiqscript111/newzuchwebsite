@@ -9,9 +9,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="leftSection">
-        {/* Placeholder for balance */}
-      </div>
+      <div className="leftSection" />
       <div className="logoContainer">
         <Link to="/" className="logoLink">
           <img src="https://i.ibb.co/Fq362M1t/Whats-App-Image-2025-02-16-at-10-54-10-65e00f92.jpg" alt="ZUCH Logo" className="logo" />
