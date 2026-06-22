@@ -15,10 +15,18 @@
   z-index: 1000;
 }
 
+.leftSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .logoContainer {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .logoLink {
@@ -28,14 +36,18 @@
 .logo {
   height: 40px;
   width: auto;
+  max-width: 100%;
   object-fit: contain;
   display: block;
 }
 
 .rightSection {
-  margin-left: auto;
+  flex: 1;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 10;
 }
 
 .iconButton {
@@ -71,4 +83,10 @@
   font-size: 10px;
   font-weight: 700;
   font-family: var(--font-space-mono);
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0 1rem;
+  }
 }

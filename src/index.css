@@ -18,6 +18,25 @@ body {
   font-family: var(--font-space-mono);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+}
+
+p {
+    text-wrap: pretty;
+}
+
+button {
+    transition-property: transform, background-color, color, border-color, opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+}
+
+button:active {
+    transform: scale(0.96);
 }
 
 * {

@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { db } from '../../utils/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { CartContext } from '../../context/cart';
+import StoreNavigation from '../StoreNavigation/StoreNavigation';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import './product.css';
 
 const ProductDetail = () => {
@@ -20,6 +23,8 @@ const ProductDetail = () => {
   const [selectedStandardSize, setSelectedStandardSize] = useState(null);
   const [isCustomSize, setIsCustomSize] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -80,6 +85,14 @@ const ProductDetail = () => {
     setTimeout(() => setNotification(null), 3000);
   };
 
+  const handleImageClick = (url) => {
+    setSelectedImage(url);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
   const handleAddToCart = () => {
     if (!isCustomSize && !selectedStandardSize) {
       showNotification('Please select a standard size.');
@@ -137,6 +150,8 @@ const ProductDetail = () => {
                   src={url}
                   alt={`${product.name} - View ${index + 1}`}
                   className="gallery-image"
+                  onClick={() => handleImageClick(url)}
+                  style={{ cursor: 'pointer' }}
                 />
               </div>
             ))
@@ -219,6 +234,32 @@ const ProductDetail = () => {
           </div>
         )}
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="mobileMenuOverlay">
+          <StoreNavigation />
+        </div>
+      )}
+
+      {/* Mobile Menu Button */}
+      <button
+        className="mobileMenuButton"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle Menu"
+      >
+        {isMobileMenuOpen ? <CloseOutlinedIcon /> : <MenuOutlinedIcon />}
+      </button>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div className="image-modal-overlay" onClick={closeModal}>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <img src={selectedImage} alt="Enlarged product view" className="enlarged-image" />
+            <button className="close-modal-btn" onClick={closeModal}>×</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
