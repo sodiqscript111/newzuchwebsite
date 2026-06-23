@@ -40,6 +40,9 @@ const Landing = () => {
         />
       ))}
 
+      {/* Gradient overlay for readability */}
+      <div className="landing-gradient"></div>
+
       {/* Content overlay */}
       <div className="landing-content">
         <h1 className="welcome-text">WELCOME TO ZUCH</h1>
