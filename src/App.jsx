@@ -15,14 +15,19 @@ import Elegant from "./Components/Elegant/elegant";
 
 import { ProductProvider } from "./context/productContext"; // Import ProductProvider
 
+import Landing from "./Components/Landing/Landing";
 import Layout from "./Components/Layout/Layout";
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Landing />,
+  },
+  {
     element: <Layout />,
     children: [
       {
-        path: "/",
+        path: "/home",
         element: <Home />,
       },
       {
