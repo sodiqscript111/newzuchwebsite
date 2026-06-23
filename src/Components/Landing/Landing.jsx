@@ -42,12 +42,10 @@ const Landing = () => {
 
       {/* Content overlay */}
       <div className="landing-content">
-        <img
-          src="https://i.ibb.co/Fq362M1t/Whats-App-Image-2025-02-16-at-10-54-10-65e00f92.jpg"
-          alt="ZUCH"
-          className="landing-logo"
-        />
         <Link to="/shopall" className="shop-now-btn">
+          SHOP NOW
+        </Link>
+      </div>
           SHOP NOW
         </Link>
       </div>
