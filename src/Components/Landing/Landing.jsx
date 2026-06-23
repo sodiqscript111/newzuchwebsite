@@ -46,9 +46,6 @@ const Landing = () => {
           SHOP NOW
         </Link>
       </div>
-          SHOP NOW
-        </Link>
-      </div>
     </div>
   );
 };
