@@ -39,11 +39,17 @@
   gap: 2.5rem;
 }
 
-.landing-logo {
-  height: 80px;
-  width: auto;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
+.welcome-text {
+  font-family: var(--font-space-mono);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  margin: 0;
+  padding: 0 1rem;
 }
 
 .shop-now-btn {
@@ -70,8 +76,9 @@
 }
 
 @media (max-width: 768px) {
-  .landing-logo {
-    height: 60px;
+  .welcome-text {
+    font-size: 2rem;
+    letter-spacing: 0.15em;
   }
 
   .shop-now-btn {

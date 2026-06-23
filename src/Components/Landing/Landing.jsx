@@ -42,6 +42,7 @@ const Landing = () => {
 
       {/* Content overlay */}
       <div className="landing-content">
+        <h1 className="welcome-text">WELCOME TO ZUCH</h1>
         <Link to="/shopall" className="shop-now-btn">
           SHOP NOW
         </Link>
