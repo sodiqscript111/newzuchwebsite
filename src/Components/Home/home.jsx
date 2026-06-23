@@ -16,6 +16,18 @@ const Home = () => {
 
   return (
     <div className="home-container">
+      {/* Fullscreen Video Background */}
+      <video
+        className="video-background"
+        autoPlay
+        loop
+        muted
+        playsInline
+      >
+        <source src="/zuchwebsitevideo.mp4" type="video/mp4" />
+      </video>
+      <div className="video-overlay" />
+
       <aside className="sidebar">
         <StoreNavigation />
       </aside>
