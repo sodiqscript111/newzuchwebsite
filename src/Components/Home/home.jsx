@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import StoreNavigation from '../StoreNavigation/StoreNavigation';
 import { ProductContext } from '../../context/productContext';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
@@ -9,6 +9,13 @@ import './home.css';
 const Home = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { products, loading } = useContext(ProductContext);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 1.25;
+    }
+  }, []);
 
   if (loading) {
     return <div className="home-loading">Loading products...</div>;
@@ -18,6 +25,7 @@ const Home = () => {
     <div className="home-container">
       {/* Fullscreen Video Background */}
       <video
+        ref={videoRef}
         className="video-background"
         autoPlay
         loop
