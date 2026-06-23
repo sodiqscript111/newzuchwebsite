@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import StoreNavigation from '../StoreNavigation/StoreNavigation';
 import ProductCard from '../ProductCard/ProductCard';
@@ -26,12 +26,33 @@ const AllProducts = () => {
       : products.filter(product => product.collectionId === collectionId)
     : products;
 
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 1.25;
+    }
+  }, []);
+
   if (loading) {
     return <div className="home-loading">Loading products...</div>;
   }
 
   return (
     <div className="home-container">
+      {/* Fullscreen Video Background */}
+      <video
+        ref={videoRef}
+        className="video-background"
+        autoPlay
+        loop
+        muted
+        playsInline
+      >
+        <source src="/zuchwebsitevideo.mp4" type="video/mp4" />
+      </video>
+      <div className="video-overlay" />
+
       <aside className="sidebar">
         <StoreNavigation />
       </aside>
