@@ -24,7 +24,7 @@ const Landing = () => {
     if (allImages.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % allImages.length);
-    }, 2500);
+    }, 1000);
     return () => clearInterval(interval);
   }, [allImages.length]);
 
