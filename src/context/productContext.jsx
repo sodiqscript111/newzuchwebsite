@@ -64,6 +64,22 @@ export const ProductProvider = ({ children }) => {
 
         // Wait for all product fetches to complete
         Promise.all(collectionPromises).then(() => {
+          
+          // Inject Y-Cut Kaftan manually
+          productsList.push({
+            id: "ycutkaftan",
+            collectionId: "customnative",
+            name: "Y-Cut Kaftan",
+            price: 80000,
+            imageUrl: [
+              "/images/y-cut-kaftan/1.jpeg",
+              "/images/y-cut-kaftan/2.jpeg",
+              "/images/y-cut-kaftan/3.jpeg",
+              "/images/y-cut-kaftan/4.jpeg",
+              "/images/y-cut-kaftan/5.jpeg"
+            ]
+          });
+
           const collectionsData = collectionsSnapshot.docs.map((doc) => {
             const collectionId = doc.id;
             return {
