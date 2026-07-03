@@ -17,15 +17,6 @@ const StoreNavigation = () => {
                 <li className="navItem">
                     <Link to="/shopall/customnative" className="navLink">Custom Native</Link>
                 </li>
-                <li className="navItem">
-                    <Link to="/shopall/zuchclassics" className="navLink">Zuch Classics</Link>
-                </li>
-                <li className="navItem">
-                    <Link to="/shopall/amorcollection" className="navLink">Amor</Link>
-                </li>
-                <li className="navItem">
-                    <Link to="/shopall/lumincolection" className="navLink">Lumin</Link>
-                </li>
 
                 <li className="categoryTitle">Information</li>
                 <li className="navItem">

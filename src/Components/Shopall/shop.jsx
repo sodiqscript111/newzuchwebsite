@@ -13,9 +13,9 @@ const AllProducts = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const categoryMap = {
-    "custom-wear": ["customnative", "zuchclassics"],
-    "classic-wear": ["lumincolection", "poisecollection", "amorcollection"],
-    "casual-wear": ["nudecolection", "streetvouge", "beachtimecollection"],
+    "custom-wear": ["customnative"],
+    "classic-wear": ["poisecollection"],
+    "casual-wear": ["nudecolection", "beachtimecollection"],
   };
 
   const filteredProducts = collectionId
