@@ -15,7 +15,7 @@ const AllProducts = () => {
   const categoryMap = {
     "custom-wear": ["customnative"],
     "classic-wear": ["poisecollection"],
-    "casual-wear": ["nudecolection", "beachtimecollection", "joggerset"],
+    "casual-wear": ["nudecolection", "beachtimecollection", "joggerset", "alpha"],
   };
 
   const filteredProducts = collectionId

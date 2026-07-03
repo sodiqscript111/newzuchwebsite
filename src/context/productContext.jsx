@@ -99,6 +99,23 @@ export const ProductProvider = ({ children }) => {
             });
           });
 
+          // Inject Alpha products manually
+          const alphaProducts = [
+            { id: "alpha-01", name: "Alpha 01", file: "alpha01.jpeg" },
+            { id: "alpha-02", name: "Alpha 02", file: "alpha02.jpeg" },
+            { id: "alpha-03", name: "Alpha 03", file: "alpha03.jpeg" }
+          ];
+
+          alphaProducts.forEach(prod => {
+            productsList.push({
+              id: prod.id,
+              collectionId: "alpha",
+              name: prod.name,
+              price: 45000, // Placeholder price
+              imageUrl: `/images/alpha/${prod.file}`
+            });
+          });
+
           const collectionsData = collectionsSnapshot.docs.map((doc) => {
             const collectionId = doc.id;
             return {
@@ -113,6 +130,13 @@ export const ProductProvider = ({ children }) => {
             id: "joggerset",
             name: "Jogger Set",
             image: "/images/joggerset/black.png"
+          });
+
+          // Inject Alpha collection
+          collectionsData.push({
+            id: "alpha",
+            name: "Alpha",
+            image: "/images/alpha/alpha01.jpeg"
           });
 
           console.log("Real-time Collections:", collectionsData);
