@@ -13,7 +13,7 @@ const AllProducts = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const categoryMap = {
-    "custom-wear": ["customnative"],
+    "custom-wear": ["customnative", "voguejalabiya"],
     "classic-wear": ["poisecollection"],
     "casual-wear": ["nudecolection", "beachtimecollection", "joggerset", "alpha"],
   };

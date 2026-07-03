@@ -116,6 +116,23 @@ export const ProductProvider = ({ children }) => {
             });
           });
 
+          // Inject Vogue Jalabiya products manually
+          const vogueJalabiyaProducts = [
+            { id: "vogue-01", name: "Vogue Jalabiya 01", files: ["01_1.jpeg", "01_2.jpeg"] },
+            { id: "vogue-02", name: "Vogue Jalabiya 02", files: ["02_1.jpeg", "02_2.jpeg"] },
+            { id: "vogue-03", name: "Vogue Jalabiya 03", files: ["03_1.jpeg", "03_2.jpeg"] }
+          ];
+
+          vogueJalabiyaProducts.forEach(prod => {
+            productsList.push({
+              id: prod.id,
+              collectionId: "voguejalabiya",
+              name: prod.name,
+              price: 55000, // Placeholder price
+              imageUrl: prod.files.map(f => `/images/voguejalabiya/${f}`)
+            });
+          });
+
           const collectionsData = collectionsSnapshot.docs.map((doc) => {
             const collectionId = doc.id;
             return {
@@ -137,6 +154,13 @@ export const ProductProvider = ({ children }) => {
             id: "alpha",
             name: "Alpha",
             image: "/images/alpha/alpha01.jpeg"
+          });
+
+          // Inject Vogue Jalabiya collection
+          collectionsData.push({
+            id: "voguejalabiya",
+            name: "Vogue Jalabiya",
+            image: "/images/voguejalabiya/01_1.jpeg"
           });
 
           console.log("Real-time Collections:", collectionsData);

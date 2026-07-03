@@ -23,6 +23,9 @@ const StoreNavigation = () => {
                 <li className="navItem">
                     <Link to="/shopall/alpha" className="navLink">Alpha</Link>
                 </li>
+                <li className="navItem">
+                    <Link to="/shopall/voguejalabiya" className="navLink">Vogue Jalabiya</Link>
+                </li>
 
                 <li className="categoryTitle">Information</li>
                 <li className="navItem">
