@@ -17,6 +17,9 @@ const StoreNavigation = () => {
                 <li className="navItem">
                     <Link to="/shopall/customnative" className="navLink">Custom Native</Link>
                 </li>
+                <li className="navItem">
+                    <Link to="/shopall/joggerset" className="navLink">Jogger Set</Link>
+                </li>
 
                 <li className="categoryTitle">Information</li>
                 <li className="navItem">
