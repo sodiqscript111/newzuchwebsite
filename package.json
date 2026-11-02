@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "images:catalog": "node scripts/images/export-catalog.mjs",
+    "images:upload": "node --env-file-if-exists=.env scripts/images/upload-images.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -30,6 +32,7 @@
     "swiper": "^11.2.1"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1156.0",
     "@eslint/js": "^9.17.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",

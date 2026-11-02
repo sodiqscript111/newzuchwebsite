@@ -1,0 +1,1212 @@
+{
+  "generatedAt": "2026-10-24T07:32:20.044Z",
+  "sources": [
+    "firestore:zuch-72a11",
+    "src/context/productContext.jsx"
+  ],
+  "collections": [
+    {
+      "slug": "alpha",
+      "name": "Alpha",
+      "legacyId": "alpha",
+      "listed": true,
+      "products": [
+        {
+          "slug": "alpha-01",
+          "legacyId": "alpha-01",
+          "name": "Alpha 01",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/alpha/alpha01.jpeg"
+            }
+          ]
+        },
+        {
+          "slug": "alpha-02",
+          "legacyId": "alpha-02",
+          "name": "Alpha 02",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/alpha/alpha02.jpeg"
+            }
+          ]
+        },
+        {
+          "slug": "alpha-03",
+          "legacyId": "alpha-03",
+          "name": "Alpha 03",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/alpha/alpha03.jpeg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "beach-time",
+      "name": "Beach Time",
+      "legacyId": "beachtimecollection",
+      "listed": true,
+      "products": [
+        {
+          "slug": "bt01",
+          "legacyId": "bt01",
+          "name": "BT01",
+          "price": 50000,
+          "description": "Beach time safari shirt X Linen loose/baggy pant",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/nXQqcHc/BT-01-60-00.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/xKW776cP/BT-01-60-000.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "bt02",
+          "legacyId": "bt02",
+          "name": "BT02",
+          "price": 70000,
+          "description": "Beach time safari shirt X Linen loose/baggy pant",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/DgtPw0XD/BT-02-80-000.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/Q7r7cS20/BT-02-80-000-1.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "custom-native",
+      "name": "Custom Native",
+      "legacyId": "customnative",
+      "listed": true,
+      "products": [
+        {
+          "slug": "nbz-black",
+          "legacyId": "nbzblack",
+          "name": "NBZ (Black)",
+          "price": 80000,
+          "description": "Darted 3/4 sleeve top X straight slit pants",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/d0RKG9WW/NBZ-BLACK-80k.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "nbz-olive-green",
+          "legacyId": "nbzolivegreen",
+          "name": "NBZ (Olive green)",
+          "price": 80000,
+          "description": "Darted 3/4 sleeve top X straight slit pants",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/p6CBYdKZ/IMG-3550.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/YBmDqMxG/NBZ-OLIVE-GREEN-80k.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "nbz-white",
+          "legacyId": "nbzwhite",
+          "name": "NBZ (White)",
+          "price": 80000,
+          "description": "Darted 3/4 sleeve top X straight slit pants",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/v4v8BYDv/NBZ-WHITE-80k.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/LX8ndTV9/NBZ-WHITE-80k.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "y-cut-kaftan",
+          "legacyId": "ycutkaftan",
+          "name": "Y-Cut Kaftan",
+          "price": 80000,
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/y-cut-kaftan/1.jpeg"
+            },
+            {
+              "source": "local",
+              "path": "public/images/y-cut-kaftan/2.jpeg"
+            },
+            {
+              "source": "local",
+              "path": "public/images/y-cut-kaftan/3.jpeg"
+            },
+            {
+              "source": "local",
+              "path": "public/images/y-cut-kaftan/4.jpeg"
+            },
+            {
+              "source": "local",
+              "path": "public/images/y-cut-kaftan/5.jpeg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "jogger-set",
+      "name": "Jogger Set",
+      "legacyId": "joggerset",
+      "listed": true,
+      "products": [
+        {
+          "slug": "ash",
+          "legacyId": "jogger-ash",
+          "name": "Ash",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/joggerset/ash.png"
+            }
+          ]
+        },
+        {
+          "slug": "brown",
+          "legacyId": "jogger-brown",
+          "name": "Brown",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/joggerset/brown.png"
+            }
+          ]
+        },
+        {
+          "slug": "navy-blue",
+          "legacyId": "jogger-navy",
+          "name": "Navy Blue",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/joggerset/navyblue.png"
+            }
+          ]
+        },
+        {
+          "slug": "beige",
+          "legacyId": "jogger-beige",
+          "name": "Beige",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/joggerset/beige.png"
+            }
+          ]
+        },
+        {
+          "slug": "black",
+          "legacyId": "jogger-black",
+          "name": "Black",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/joggerset/black.png"
+            }
+          ]
+        },
+        {
+          "slug": "green",
+          "legacyId": "jogger-green",
+          "name": "Green",
+          "price": 45000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/joggerset/green.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "nude",
+      "name": "Nude",
+      "legacyId": "nudecolection",
+      "listed": true,
+      "products": [
+        {
+          "slug": "nude-dusty-pink",
+          "legacyId": "dustypinknude",
+          "name": "Nude (Dusty Pink)",
+          "price": 60000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/VYcKLTBG/DP-NUDE-70k.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/62gMRLw/DP-NUDE-70k.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "nude-khaki",
+          "legacyId": "khakinude",
+          "name": "Nude (Khaki)",
+          "price": 60000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/VWcC55wg/K-NUDE-70k-1.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/Vc2Y848C/K-NUDE-70k.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "nude-natural",
+          "legacyId": "naturalnude",
+          "name": "Nude (Natural)",
+          "price": 60000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/Hf9yLNV6/N-NUDE-70k.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "poise",
+      "name": "Poise",
+      "legacyId": "poisecollection",
+      "listed": true,
+      "products": [
+        {
+          "slug": "poise-black",
+          "legacyId": "poiseblack",
+          "name": "Poise (Black)",
+          "price": 100000,
+          "description": "Half see-through loose fit buckle top X loose slit pants COMFORT X LUXURY✨",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/dNWkBTj/POISE-BLACK-2-100k.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/NdnvqPLD/POISE-BLACK-2-100k-2.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/KPRgLLR/POISE-BLACK-1-100k-2.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "poise-blue-gray",
+          "legacyId": "poiseblue",
+          "name": "Poise ( Blue Gray)",
+          "price": 100000,
+          "description": "Half see-through loose fit buckle top X loose slit pants COMFORT X LUXURY✨",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/zhyz4xsS/IMG-1448.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/s870SSF/IMG-1449.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "poise-gray-grren",
+          "legacyId": "poisegray",
+          "name": "Poise (Gray grren)",
+          "price": 100000,
+          "description": "Half see-through loose fit buckle top X loose slit pants COMFORT X LUXURY✨",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/HTW0wNkS/POISE-GREEN-GREY-100k.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/yBxM4dwS/IMG-1280.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/dsftKnty/IMG-1306.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "poise-white",
+          "legacyId": "poisewhite",
+          "name": "Poise (White)",
+          "price": 100000,
+          "description": "Half see-through loose fit buckle top X loose slit pants COMFORT X LUXURY✨",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/xqTxkYw7/POISE-WHITE-100k-1.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/DPPcQVsv/IMG-1461.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/RGxQ2hqZ/IMG-1460.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "vogue-jalabiya",
+      "name": "Vogue Jalabiya",
+      "legacyId": "voguejalabiya",
+      "listed": true,
+      "products": [
+        {
+          "slug": "vogue-jalabiya-01",
+          "legacyId": "vogue-01",
+          "name": "Vogue Jalabiya 01",
+          "price": 55000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/voguejalabiya/01_1.jpeg"
+            },
+            {
+              "source": "local",
+              "path": "public/images/voguejalabiya/01_2.jpeg"
+            }
+          ]
+        },
+        {
+          "slug": "vogue-jalabiya-02",
+          "legacyId": "vogue-02",
+          "name": "Vogue Jalabiya 02",
+          "price": 55000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/voguejalabiya/02_1.jpeg"
+            },
+            {
+              "source": "local",
+              "path": "public/images/voguejalabiya/02_2.jpeg"
+            }
+          ]
+        },
+        {
+          "slug": "vogue-jalabiya-03",
+          "legacyId": "vogue-03",
+          "name": "Vogue Jalabiya 03",
+          "price": 55000,
+          "priceNote": "placeholder price from productContext.jsx",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "local",
+              "path": "public/images/voguejalabiya/03_1.jpeg"
+            },
+            {
+              "source": "local",
+              "path": "public/images/voguejalabiya/03_2.jpeg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "amor",
+      "name": "Amor",
+      "legacyId": "amorcollection",
+      "listed": false,
+      "products": [
+        {
+          "slug": "amor-men",
+          "legacyId": "amormen",
+          "name": "Amor (Men)",
+          "price": 65000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/rfkGT2cN/IMG-3533.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/xtrvhkjT/AMOR-MEN-65k.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "amor-women",
+          "legacyId": "amorwomen",
+          "name": "Amor (Women)",
+          "price": 65000,
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/676GLrsR/IMG-3539.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/mVHBw9nF/IMG-3538.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/WpGDKpcz/AMOR-WOMEN-65k.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "city-ace",
+      "name": "City Ace",
+      "legacyId": "CityAce",
+      "listed": false,
+      "products": [
+        {
+          "slug": "c-a-c-001",
+          "legacyId": "CityAce",
+          "name": "C.A.C 001",
+          "price": 80000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/IsT9437GV.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/sLrG5667u.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/nTR7434XI.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/Ypy5618Fw.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "high-rave",
+      "name": "High Rave",
+      "legacyId": "highrave",
+      "listed": false,
+      "products": [
+        {
+          "slug": "high-rave-fashion",
+          "legacyId": "highrave",
+          "name": "High Rave Fashion",
+          "price": 50000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/sxMk9613WA.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/iry3913Sc.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "lumin",
+      "name": "Lumin",
+      "legacyId": "lumincolection",
+      "listed": false,
+      "products": [
+        {
+          "slug": "lumin-blue",
+          "legacyId": "luminblue ",
+          "name": "Lumin (Blue)",
+          "price": 60000,
+          "description": "Lumin Short sleeve Shirt Jacket X front slit straight pant",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/TMgS4MQP/Lumin-blue-80k-1.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/fY4yd38P/Lumin-Blue-80k.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "lumin-mint",
+          "legacyId": "luminmint",
+          "name": "Lumin (Mint)",
+          "price": 70000,
+          "description": "Lumin Short sleeve Shirt Jacket X front slit straight pant",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/jP1Hf17z/Lumin-Mint-90k.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/dJ3N2CWV/Lumin-Mint-90k-1.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "lumin-white",
+          "legacyId": "luminwhite",
+          "name": "Lumin (White)",
+          "price": 70000,
+          "description": "Lumin Short sleeve Shirt Jacket X front slit straight pant",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/PZkH8yYv/Lumin-White-90k.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/k6rTpp2R/Lumin-White-90-000.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "majestic-pearl",
+      "name": "Majestic Pearl",
+      "legacyId": "majesticpearl",
+      "listed": false,
+      "products": [
+        {
+          "slug": "the-majestic-pearl",
+          "legacyId": "majecticpearl",
+          "name": "The Majestic Pearl",
+          "price": 100000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/Hy6752KCk.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/XQ9246TqE.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/XfCZ8603sCw.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "neutral-nobles",
+      "name": "Neutral Nobles",
+      "legacyId": "nobles",
+      "listed": false,
+      "products": [
+        {
+          "slug": "neutral-nobles-brown",
+          "legacyId": "noblebrown",
+          "name": "Neutral Nobles (Brown)",
+          "price": 60000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/kN2731Ye.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/JcB2550w.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/Vz2133fFM.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "neutral-nobles-black",
+          "legacyId": "noblesblack",
+          "name": "Neutral Nobles (Black)",
+          "price": 60000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/OCXO9377avY.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/N2103MdI.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/ia2308SgQ.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "ray",
+      "name": "Ray",
+      "legacyId": "ray",
+      "listed": false,
+      "products": [
+        {
+          "slug": "ray-blue",
+          "legacyId": "rayblue",
+          "name": "Ray Blue",
+          "price": 80000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/qEE3619Bww.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/vLxN1087MI.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "ray-brown",
+          "legacyId": "raybrown",
+          "name": "Ray Brown",
+          "price": 80000,
+          "description": "",
+          "sizes": [
+            "S",
+            "L",
+            "XL",
+            "M"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/TUK1248xmQ.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/bWT4693GI.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "ray-white",
+          "legacyId": "raywhite",
+          "name": "Ray White",
+          "price": 80000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/jVa7837CPI.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/edG4895Ts.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "street-vouge",
+      "name": "Street Vouge",
+      "legacyId": "streetvouge",
+      "listed": false,
+      "products": [
+        {
+          "slug": "street-vouge-brown",
+          "legacyId": "streetvouge",
+          "name": "Street Vouge (Brown)",
+          "price": 50000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/HDDJ1j50/IMG-3493.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/Xrt6zxCX/IMG-3525.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "street-vouge-classy-brown",
+          "legacyId": "streetvougeclassy",
+          "name": "Street Vouge Classy(Brown)",
+          "price": 60000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/wFbh7dp7/IMG-3494.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/d46R12B2/IMG-3530.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "street-vouge-classy-black",
+          "legacyId": "streetvougeclassyblack",
+          "name": "Street Vouge classy (Black)",
+          "price": 60000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/4nRzPmgz/IMG-3495.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "street-vouge-female",
+          "legacyId": "streetvougefemale",
+          "name": "Street Vouge(Female)",
+          "price": 30000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/JXC8M3t/IMG-3522.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/3mGK7jf8/IMG-3521.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "street-vouge-white",
+          "legacyId": "streetvougewhite",
+          "name": "Street Vouge (White)",
+          "price": 50000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/yc1qkZYT/IMG-3524.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/5gPqZmnr/IMG-3632.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "urban-ash",
+          "legacyId": "urbanash",
+          "name": "Urban(Ash)",
+          "price": 70000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/8CPLg8y/IMG-3660.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/7JQmZyJk/IMG-3659.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/G3pZn3dj/IMG-3661.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "urban-black",
+          "legacyId": "urbanblack ",
+          "name": "Urban (Black)",
+          "price": 70000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/vvZtyL7C/IMG-3658.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/qLNCWTYx/IMG-3662.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/Lhb3Sns6/IMG-3657.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "y-effect",
+      "name": "The Y Effect",
+      "legacyId": "YEffect",
+      "listed": false,
+      "products": [
+        {
+          "slug": "the-y-effect",
+          "legacyId": "TheYEffect",
+          "name": "The Y Effect",
+          "price": 85000,
+          "description": "",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/tstM9656Eo.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/nUxV5863nWI.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.imghippo.com/files/eJI6950OL.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "zuch-classics",
+      "name": "Zuch Classics",
+      "legacyId": "zuchclassics",
+      "listed": false,
+      "products": [
+        {
+          "slug": "zuch-classic-101",
+          "legacyId": "zuchdotted",
+          "name": "Zuch Classic 101",
+          "price": null,
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/spkjH79x/IMG-3555.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/My1WqRB6/IMG-3556.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/LXmzBZL9/IMG-3557.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "zuch-classics-102",
+          "legacyId": "zuchflower",
+          "name": "Zuch Classics 102",
+          "price": null,
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/3J4fn9b/IMG-3560.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/jkfn8nwk/IMG-3561.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/tM8GvH0N/IMG-3554.jpg"
+            }
+          ]
+        },
+        {
+          "slug": "zuch-classics-103",
+          "legacyId": "zuchgold",
+          "name": "Zuch Classics 103",
+          "price": null,
+          "priceNote": "Book Appointment",
+          "description": "",
+          "sizes": [],
+          "images": [
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/RrtKDxZ/IMG-3551.jpg"
+            },
+            {
+              "source": "remote",
+              "url": "https://i.ibb.co/whmPrV3C/IMG-3552.jpg"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "siteAssets": [
+    {
+      "key": "site/hero/headerpicone.jpg",
+      "path": "src/assets/headerpicone.jpg"
+    },
+    {
+      "key": "site/hero/headerpictwo.jpg",
+      "path": "src/assets/headerpictwo.jpg"
+    },
+    {
+      "key": "site/hero/headerpicthree.jpg",
+      "path": "src/assets/headerpicthree.jpg"
+    },
+    {
+      "key": "site/hero/headerpicfour.jpg",
+      "path": "src/assets/headerpicfour.jpg"
+    },
+    {
+      "key": "site/video/zuchwebsitevideo.mp4",
+      "path": "public/zuchwebsitevideo.mp4"
+    }
+  ]
+}
