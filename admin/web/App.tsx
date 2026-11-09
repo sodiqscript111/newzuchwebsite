@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { api, isPreview, type Collection, type Order, type Product } from "./api.ts"
+import { api, SignedOut, type Collection, type Order, type Product } from "./api.ts"
+import { Login } from "./Login.tsx"
 import { Orders } from "./Orders.tsx"
 import { ProductEditor } from "./ProductEditor.tsx"
 import { Products } from "./Products.tsx"
@@ -19,6 +20,7 @@ const useHash = () => {
 
 export function App() {
   const hash = useHash()
+  const [signedIn, setSignedIn] = useState<boolean | null>(null)
   const [orders, setOrders] = useState<ReadonlyArray<Order> | null>(null)
   const [products, setProducts] = useState<ReadonlyArray<Product> | null>(null)
   const [collections, setCollections] = useState<ReadonlyArray<Collection>>([])
@@ -32,6 +34,11 @@ export function App() {
     toastTimer.current = window.setTimeout(() => setToast(null), isError ? 6000 : 2500)
   }, [])
 
+  const handleError = useCallback((error: unknown) => {
+    if (error instanceof SignedOut) setSignedIn(false)
+    else notify(error instanceof Error ? error.message : "Something went wrong", true)
+  }, [notify])
+
   const load = useCallback(() => {
     setLoadError(null)
     Promise.all([api.orders(), api.products(), api.collections()])
@@ -39,11 +46,22 @@ export function App() {
         setOrders(orders)
         setProducts(products)
         setCollections(collections)
+        setSignedIn(true)
       })
-      .catch(() => setLoadError("Could not reach the server."))
+      .catch((error) => {
+        if (error instanceof SignedOut) setSignedIn(false)
+        else setLoadError("Could not reach the server.")
+      })
   }, [])
 
   useEffect(load, [load])
+
+  const signOut = async () => {
+    await api.logout().catch(() => undefined)
+    setSignedIn(false)
+    setOrders(null)
+    setProducts(null)
+  }
 
   const updateOrder = (next: Order) => setOrders((all) => all?.map((o) => (o.id === next.id ? next : o)) ?? null)
 
@@ -55,10 +73,12 @@ export function App() {
 
   const dropProduct = (id: string) => setProducts((all) => all?.filter((p) => p.id !== id) ?? null)
 
+  if (signedIn === false) return <Login onSignedIn={load} />
+
   const [path, productId] = hash.split("/").filter(Boolean)
+  const toDo = orders?.filter((o) => o.status === "paid" || o.status === "in_progress").length ?? 0
   // Open on Orders when there is something to handle, otherwise on Products.
-  const section = path ?? (orders?.length ? "orders" : "products")
-  const openOrders = orders?.filter((o) => o.status !== "done").length ?? 0
+  const section = path ?? (toDo > 0 ? "orders" : "products")
 
   let page = <p className="empty">Loading…</p>
   if (loadError) {
@@ -81,28 +101,27 @@ export function App() {
             onSaved={saveProduct}
             onDeleted={dropProduct}
             notify={notify}
+            onError={handleError}
           />
         )
         : <p className="empty">That product no longer exists.</p>
     } else if (section === "products") {
       page = <Products products={products} collections={collections} />
     } else {
-      page = <Orders orders={orders} onChange={updateOrder} notify={notify} />
+      page = <Orders orders={orders} onChange={updateOrder} onError={handleError} />
     }
   }
 
   return (
     <>
       <header className="topbar">
-        <div className="brand-row">
-          <a className="brand" href="#/">ZUCH</a>
-          {isPreview && <span className="tag">Preview</span>}
-        </div>
+        <a className="brand" href="#/">ZUCH</a>
         <nav aria-label="Main">
           <a href="#/orders" aria-current={section !== "products" ? "page" : undefined}>
-            Orders{openOrders > 0 && <span className="count">{openOrders}</span>}
+            Orders{toDo > 0 && <span className="count">{toDo}</span>}
           </a>
           <a href="#/products" aria-current={section === "products" ? "page" : undefined}>Products</a>
+          <button className="signout" onClick={signOut}>Sign out</button>
         </nav>
       </header>
       <main>{page}</main>

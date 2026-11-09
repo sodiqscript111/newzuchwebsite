@@ -1,2 +1,7 @@
 /* App.css */
 /* Removed old layout styling. Styling is now handled by Layout and component modules. */
+html,
+body {
+  background: #fff;
+  color: #000;
+}

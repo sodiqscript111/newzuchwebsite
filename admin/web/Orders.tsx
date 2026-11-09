@@ -1,34 +1,48 @@
 import { useState } from "react"
 import { api, type Order, type OrderStatus } from "./api.ts"
 
-const STATUSES: ReadonlyArray<{ value: OrderStatus; label: string }> = [
-  { value: "new", label: "Not started" },
+const STEPS: ReadonlyArray<{ value: "paid" | "in_progress" | "completed"; label: string }> = [
+  { value: "paid", label: "Not started" },
   { value: "in_progress", label: "Working on it" },
-  { value: "done", label: "Done" }
+  { value: "completed", label: "Done" }
 ]
 
+const UNPAID_LABELS: Partial<Record<OrderStatus, string>> = {
+  awaiting_payment: "Awaiting payment",
+  payment_failed: "Payment failed",
+  expired: "Payment expired",
+  cancelled: "Cancelled"
+}
+
+const isToDo = (o: Order) => o.status === "paid" || o.status === "in_progress"
+const isUnpaid = (o: Order) => o.status === "awaiting_payment" || o.status === "payment_failed" || o.status === "expired"
+
 const VIEWS = [
-  { value: "todo", label: "To do", matches: (o: Order) => o.status !== "done" },
-  { value: "done", label: "Done", matches: (o: Order) => o.status === "done" },
+  { value: "todo", label: "To do", matches: isToDo },
+  { value: "done", label: "Done", matches: (o: Order) => o.status === "completed" },
+  { value: "unpaid", label: "Unpaid", matches: isUnpaid },
   { value: "all", label: "All", matches: () => true }
 ] as const
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })
 
-const describeOptions = (options: Readonly<Record<string, string>>) => {
-  const entries = Object.entries(options)
-  if (entries.length === 1 && entries[0][0] === "size") return `Size ${entries[0][1]}`
-  return entries.map(([key, value]) => `${key} ${value}`).join(" · ")
+const describeSize = (item: Order["items"][number]) => {
+  if (item.size) return `Size ${item.size}`
+  if (item.measurements) {
+    const { chest, waist, hips, length } = item.measurements
+    return `Chest ${chest} · waist ${waist} · hips ${hips} · length ${length} cm`
+  }
+  return ""
 }
 
 interface Props {
   readonly orders: ReadonlyArray<Order>
   readonly onChange: (order: Order) => void
-  readonly notify: (text: string, isError?: boolean) => void
+  readonly onError: (error: unknown) => void
 }
 
-export function Orders({ orders, onChange, notify }: Props) {
+export function Orders({ orders, onChange, onError }: Props) {
   const [view, setView] = useState<(typeof VIEWS)[number]["value"]>("todo")
   const current = VIEWS.find((v) => v.value === view)!
   const visible = orders.filter(current.matches)
@@ -52,30 +66,31 @@ export function Orders({ orders, onChange, notify }: Props) {
             {orders.length === 0
               ? "No orders yet. New orders will show up here."
               : view === "todo"
-              ? "Nothing to do. All orders are handled."
-              : "No orders here yet."}
+              ? "Nothing to do. All paid orders are handled."
+              : "No orders here."}
           </p>
         )
         : (
           <div className="orders">
-            {visible.map((order) => <OrderCard key={order.id} order={order} onChange={onChange} notify={notify} />)}
+            {visible.map((order) => <OrderCard key={order.id} order={order} onChange={onChange} onError={onError} />)}
           </div>
         )}
     </>
   )
 }
 
-function OrderCard({ order, onChange, notify }: { readonly order: Order } & Omit<Props, "orders">) {
+function OrderCard({ order, onChange, onError }: { readonly order: Order } & Omit<Props, "orders">) {
   const [note, setNote] = useState(order.note)
+  const unpaidLabel = UNPAID_LABELS[order.status]
 
   const save = async (update: { status?: OrderStatus; note?: string }) => {
     // Show the change straight away, put it back if the save fails.
-    onChange({ ...order, ...update } as Order)
+    onChange({ ...order, ...update })
     try {
       onChange(await api.updateOrder(order.id, update))
     } catch (error) {
       onChange(order)
-      notify(error instanceof Error ? error.message : "Could not save", true)
+      onError(error)
     }
   }
 
@@ -83,8 +98,9 @@ function OrderCard({ order, onChange, notify }: { readonly order: Order } & Omit
     <article className={`order status-${order.status}`}>
       <header>
         <div>
-          <strong>{order.reference}</strong>
-          {order.isSample && <span className="tag">Sample</span>}
+          <strong>{order.number}</strong>
+          {unpaidLabel && <span className="tag warn-tag">{unpaidLabel}</span>}
+          {order.hasAccount && <span className="tag">Account</span>}
         </div>
         <time className="muted" dateTime={order.createdAt}>{formatDate(order.createdAt)}</time>
       </header>
@@ -95,13 +111,15 @@ function OrderCard({ order, onChange, notify }: { readonly order: Order } & Omit
             {item.imageUrl ? <img src={item.imageUrl} alt="" loading="lazy" /> : <span className="no-photo" />}
             <div>
               <p>{item.quantity > 1 && <strong>{item.quantity} × </strong>}{item.name}</p>
-              <p className="muted">{describeOptions(item.options)}</p>
+              <p className="muted">{describeSize(item)}</p>
             </div>
           </li>
         ))}
       </ul>
 
       <dl className="order-contact">
+        <dt>Name</dt>
+        <dd>{order.name}</dd>
         <dt>Deliver to</dt>
         <dd>{order.address}</dd>
         <dt>Phone</dt>
@@ -121,18 +139,22 @@ function OrderCard({ order, onChange, notify }: { readonly order: Order } & Omit
         />
       </label>
 
-      <div className="segmented" role="group" aria-label={`Status of ${order.reference}`}>
-        {STATUSES.map((status) => (
-          <button
-            key={status.value}
-            aria-pressed={order.status === status.value}
-            onClick={() => order.status !== status.value && save({ status: status.value })}
-          >
-            {status.label}
-          </button>
-        ))}
-      </div>
-      {order.handledAt && <p className="muted handled">Handled {formatDate(order.handledAt)}</p>}
+      {unpaidLabel
+        ? <p className="muted handled">Waiting on payment. Nothing to make yet.</p>
+        : (
+          <div className="segmented" role="group" aria-label={`Status of ${order.number}`}>
+            {STEPS.map((step) => (
+              <button
+                key={step.value}
+                aria-pressed={order.status === step.value}
+                onClick={() => order.status !== step.value && save({ status: step.value })}
+              >
+                {step.label}
+              </button>
+            ))}
+          </div>
+        )}
+      {order.paidAt && <p className="muted handled">Paid {formatDate(order.paidAt)}</p>}
     </article>
   )
 }

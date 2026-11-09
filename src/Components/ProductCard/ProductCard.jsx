@@ -73,7 +73,7 @@ const ProductCard = ({ id, collectionId, name, price, imageUrl }) => {
             <span className="colorIndicator">One Color</span>
           ) : (
             <span>
-              ₦{price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+              {price === null ? 'Price on request' : `₦${price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`}
             </span>
           )}
         </div>

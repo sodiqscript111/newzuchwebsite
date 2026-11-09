@@ -1,16 +1,15 @@
 // vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    viteCompression({
-      algorithm: 'gzip',
-      ext: '.gz',
-    }),
-  ],
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8787',
+      '/media': 'http://localhost:8787',
+    },
+  },
   build: {
     minify: 'terser', // Use Terser for aggressive JS minification
     cssMinify: true, // Minify CSS

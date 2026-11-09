@@ -3,13 +3,14 @@ import { defineConfig } from "vite"
 
 export default defineConfig({
   root: "web",
+  base: "/admin/",
   plugins: [react()],
   build: { outDir: "../dist", emptyOutDir: true },
   server: {
     port: 5174,
     proxy: {
-      "/api": "http://localhost:4320",
-      "/uploads": "http://localhost:4320"
+      "/api": "http://localhost:8787",
+      "/media": "http://localhost:8787"
     }
   }
 })

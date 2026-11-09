@@ -1,12 +1,8 @@
-import type { Collection, Order, OrderStatus, Product, ProductInput } from "../shared/api.ts"
+import type { Collection, Order, OrderStatus, Product, ProductFields } from "./types.ts"
 
-export type { Collection, Order, OrderStatus, Product }
+export type { Collection, Order, OrderStatus, Product, ProductFields }
 
-// What the forms send; `ProductInput` is a class on the server, plain JSON here.
-export type ProductFields = { [K in keyof ProductInput]: ProductInput[K] }
-
-// `npm run build:preview` makes a look-only site from web/public/preview, with no server.
-export const isPreview = import.meta.env.MODE === "preview"
+export class SignedOut extends Error {}
 
 const MAX_PHOTO_BYTES = 1_500_000
 const MAX_PHOTO_SIDE = 2000
@@ -31,19 +27,15 @@ async function shrinkPhoto(file: File): Promise<File> {
 }
 
 async function request<A>(method: string, url: string, body?: unknown): Promise<A> {
-  if (isPreview) {
-    if (method !== "GET") throw new Error("This is a preview, so changes aren't saved.")
-    const data = await (await fetch("/preview/data.json")).json() as Record<string, A>
-    return data[url.slice(1)]
-  }
-
   const isForm = body instanceof FormData
-  const response = await fetch(`/api${url}`, {
+  const response = await fetch(`/api/admin${url}`, {
     method,
+    credentials: "same-origin",
     headers: body === undefined || isForm ? undefined : { "content-type": "application/json" },
     body: body === undefined ? undefined : isForm ? body : JSON.stringify(body)
   })
   const text = await response.text()
+  if (response.status === 401 && url !== "/login") throw new SignedOut("Signed out")
   if (!response.ok) {
     let message = "Something went wrong. Try again."
     try {
@@ -57,6 +49,10 @@ async function request<A>(method: string, url: string, body?: unknown): Promise<
 }
 
 export const api = {
+  login: (password: string) => request<void>("POST", "/login", { password }),
+  logout: () => request<void>("POST", "/logout"),
+  me: () => request<{ signedIn: true }>("GET", "/me"),
+
   orders: () => request<Array<Order>>("GET", "/orders"),
   updateOrder: (id: string, update: { status?: OrderStatus; note?: string }) =>
     request<Order>("PATCH", `/orders/${id}`, update),
@@ -69,7 +65,6 @@ export const api = {
   updateProduct: (id: string, fields: ProductFields) => request<Product>("PATCH", `/products/${id}`, fields),
   removeProduct: (id: string) => request<void>("DELETE", `/products/${id}`),
 
-  // One at a time, because Vercel refuses request bodies over 4.5 MB.
   addPhotos: async (id: string, files: ReadonlyArray<File>) => {
     let product: Product | undefined
     for (const file of files) {

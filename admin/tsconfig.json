@@ -10,7 +10,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "types": ["node", "vite/client"]
+    "types": ["vite/client"]
   },
-  "include": ["server", "shared", "web", "scripts", "vite.config.ts"]
+  "include": ["web", "vite.config.ts"]
 }

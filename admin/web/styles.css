@@ -378,7 +378,7 @@ main {
   color: var(--working);
 }
 
-.order.status-done .segmented button[aria-pressed="true"] {
+.order.status-completed .segmented button[aria-pressed="true"] {
   background: var(--done-bg);
   color: var(--done);
 }
@@ -753,5 +753,54 @@ textarea {
   * {
     transition: none !important;
     animation: none !important;
+  }
+}
+
+.signout {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-inner);
+  background: transparent;
+  color: var(--muted);
+}
+
+.signout:hover {
+  color: var(--text);
+}
+
+.tag.warn-tag {
+  background: var(--working-bg);
+  color: var(--working);
+}
+
+.order.status-awaiting_payment,
+.order.status-payment_failed,
+.order.status-expired,
+.order.status-cancelled {
+  opacity: 0.75;
+}
+
+.login {
+  display: grid;
+  gap: 16px;
+  max-width: 360px;
+  margin: 15vh auto 0;
+  padding: 24px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.login h1 {
+  letter-spacing: 0.2em;
+}
+
+.login-error {
+  color: var(--danger);
+}
+
+@media (max-width: 640px) {
+  .topbar nav .signout {
+    padding: 0 8px;
   }
 }

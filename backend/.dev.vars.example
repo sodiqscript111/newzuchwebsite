@@ -1,0 +1,9 @@
+# Copy to .dev.vars for `npm run dev`. .dev.vars is never committed.
+ENVIRONMENT=development
+PUBLIC_URL=http://localhost:8787
+ADMIN_PASSWORD=change-me-locally
+
+# Leave the Bachs keys empty to use the pretend checkout at /api/dev/checkout.
+# Bachs refuses localhost return addresses, so real sandbox payments need a public URL.
+BACHS_SECRET_KEY=
+BACHS_WEBHOOK_SECRET=

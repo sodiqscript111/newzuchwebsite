@@ -1,142 +1,122 @@
-import React, { useContext, useState, useEffect } from "react";
-import { CartContext } from "../../context/cart";
-import { motion, AnimatePresence } from "framer-motion";
-import { ToastContainer, toast } from "react-toastify";
-import { db } from "../../utils/firebase";
-import { collection, addDoc } from "firebase/firestore";
-import "react-toastify/dist/ReactToastify.css";
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { api, describeItemSize, formatNaira } from "../../api";
+import { AccountContext } from "../../context/account";
+import { CartContext, cartLineKey } from "../../context/cart";
+import "../../styles/shop-pages.css";
 import "./cart.css";
 
 const Cart = () => {
-  const { cartItems, increaseQuantity, decreaseQuantity, removeItemFromCart } = useContext(CartContext);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState({ email: "", phone: "", address: "" });
-  const [isPaystackLoaded, setIsPaystackLoaded] = useState(false);
-
-  const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
-  const totalAmount = cartItems.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
-  const amountInKobo = totalAmount * 100;
-  const reference = `order_${new Date().getTime()}`;
+  const { cartItems, cartTotal, increaseQuantity, decreaseQuantity, removeItemFromCart } = useContext(CartContext);
+  const { customer } = useContext(AccountContext);
+  const [contact, setContact] = useState({ name: "", email: "", phone: "", address: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://js.paystack.co/v1/inline.js";
-    script.async = true;
-    script.onload = () => setIsPaystackLoaded(true);
-    script.onerror = () => toast.error("Failed to load Paystack.");
-    document.body.appendChild(script);
-    return () => document.body.removeChild(script);
-  }, []);
+    if (!customer) return;
+    setContact((current) => ({
+      ...current,
+      name: current.name || customer.name,
+      email: current.email || customer.email,
+      phone: current.phone || customer.phone,
+    }));
+  }, [customer]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserInfo((prev) => ({ ...prev, [name]: value }));
-  };
+  const update = (event) => setContact((current) => ({ ...current, [event.target.name]: event.target.value }));
 
-  const validateForm = () => userInfo.email && userInfo.phone && userInfo.address && totalAmount > 0;
-
-  const saveOrderToFirestore = async (ref) => {
+  const checkout = async (event) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setError(null);
     try {
-      const orderData = {
-        reference: ref,
-        email: userInfo.email,
-        phone: userInfo.phone,
-        address: userInfo.address,
-        cartItems: cartItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          price: item.price || 0,
-          quantity: item.quantity || 1,
-          imageUrl: item.imageUrl || "https://placehold.co/150",
-          options: item.options || { size: "N/A" },
-        })),
-        timestamp: new Date().toISOString(),
-        status: "Pending",
-      };
-      await addDoc(collection(db, "orders"), orderData);
-      toast.success("Order saved!");
-    } catch (error) {
-      toast.error("Failed to save order.");
+      const result = await api("/checkout", {
+        method: "POST",
+        body: {
+          contact,
+          items: cartItems.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            ...(item.size ? { size: item.size } : { measurements: item.measurements }),
+          })),
+        },
+      });
+      window.location.assign(result.checkoutUrl);
+    } catch (err) {
+      setError(err.message);
+      setSubmitting(false);
     }
   };
 
-  const handlePaystackPayment = () => {
-    if (!isPaystackLoaded || !window.PaystackPop) {
-      toast.error("Paystack not loaded yet.");
-      return;
-    }
-    if (!validateForm()) {
-      toast.error("Please complete all fields.");
-      return;
-    }
-
-    const handler = window.PaystackPop.setup({
-      key: paystackKey,
-      email: userInfo.email,
-      amount: amountInKobo,
-      ref: reference,
-      callback: (response) => {
-        if (response.status === "success") {
-          saveOrderToFirestore(response.reference);
-          toast.success(`Payment successful! Ref: ${response.reference}`);
-          setIsCheckoutOpen(false);
-        }
-      },
-      onClose: () => toast.info("Payment cancelled."),
-    });
-    handler.openIframe();
-  };
+  if (cartItems.length === 0) {
+    return (
+      <div className="cart-page">
+        <h1 className="cart-title">Shopping Cart</h1>
+        <p className="cart-empty">Your cart is empty.</p>
+        <p className="shop-center">
+          <Link to="/shopall" className="shop-button">Start shopping</Link>
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <motion.div className="cart-page" initial="hidden" animate="visible">
+    <div className="cart-page">
       <h1 className="cart-title">Shopping Cart</h1>
-      {cartItems.length === 0 ? (
-        <p className="cart-empty">Your cart is empty. Start shopping!</p>
-      ) : (
-        <>
-          <ul className="cart-list">
-            <AnimatePresence>
-              {cartItems.map((item, index) => (
-                <motion.li key={`${item.id}-${index}`} className="cart-card">
-                  <div className="cart-details">
-                    <h3 className="cart-item-name">{item.name}</h3>
-                    <p className="cart-item-price">₦{(item.price || 0).toLocaleString()}</p>
-                    <div className="cart-controls">
-                      <button onClick={() => decreaseQuantity(item)}>-</button>
-                      <span>{item.quantity || 1}</span>
-                      <button onClick={() => increaseQuantity(item)}>+</button>
-                      <button className="remove-btn" onClick={() => removeItemFromCart(item)}>Remove</button>
-                    </div>
-                  </div>
-                </motion.li>
-              ))}
-            </AnimatePresence>
-          </ul>
-          <div className="cart-summary">
-            <h2>Total: ₦{totalAmount.toLocaleString()}</h2>
-            <button className="checkout-btn" onClick={() => setIsCheckoutOpen(true)}>Checkout</button>
-          </div>
-        </>
-      )}
-
-      <AnimatePresence>
-        {isCheckoutOpen && (
-          <motion.div className="checkout-modal">
-            <h2>Checkout</h2>
-            <form>
-              <input type="email" name="email" value={userInfo.email} onChange={handleInputChange} placeholder="Email" />
-              <input type="tel" name="phone" value={userInfo.phone} onChange={handleInputChange} placeholder="Phone" />
-              <input type="text" name="address" value={userInfo.address} onChange={handleInputChange} placeholder="Address" />
-              <div className="modal-actions">
-                <button type="button" onClick={() => setIsCheckoutOpen(false)}>Cancel</button>
-                <button type="button" onClick={handlePaystackPayment} disabled={!validateForm()}>Pay Now</button>
+      <ul className="cart-list">
+        {cartItems.map((item) => (
+          <li key={cartLineKey(item)} className="cart-card">
+            {item.imageUrl && <img className="cart-thumb" src={item.imageUrl} alt="" />}
+            <div className="cart-details">
+              <h3 className="cart-item-name">{item.name}</h3>
+              <p className="cart-item-size">{describeItemSize(item)}</p>
+              <p className="cart-item-price">{formatNaira(item.price)}</p>
+              <div className="cart-controls">
+                <button onClick={() => decreaseQuantity(item)} aria-label={`One less ${item.name}`}>-</button>
+                <span aria-label="Quantity">{item.quantity}</span>
+                <button onClick={() => increaseQuantity(item)} aria-label={`One more ${item.name}`}>+</button>
+                <button className="remove-btn" onClick={() => removeItemFromCart(item)}>Remove</button>
               </div>
-            </form>
-          </motion.div>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <form className="shop-form checkout-form" onSubmit={checkout}>
+        <h2>Delivery details</h2>
+        {!customer && (
+          <p className="shop-muted">
+            Checking out as a guest. <Link to="/account">Sign in</Link> to keep your orders in one place.
+          </p>
         )}
-      </AnimatePresence>
-      <ToastContainer />
-    </motion.div>
+        <label>
+          Full name
+          <input name="name" autoComplete="name" required value={contact.name} onChange={update} />
+        </label>
+        <label>
+          Email
+          <input name="email" type="email" autoComplete="email" required value={contact.email} onChange={update} />
+        </label>
+        <label>
+          Phone
+          <input name="phone" type="tel" autoComplete="tel" required minLength={5} value={contact.phone} onChange={update} />
+        </label>
+        <label>
+          Delivery address
+          <textarea name="address" autoComplete="street-address" required minLength={5} rows={3} value={contact.address} onChange={update} />
+        </label>
+
+        <div className="checkout-total">
+          <span>Total</span>
+          <strong>{formatNaira(cartTotal)}</strong>
+        </div>
+        {error && <p className="shop-error" role="alert">{error}</p>}
+        <button type="submit" className="shop-button" disabled={submitting}>
+          {submitting ? "Taking you to payment…" : "Pay securely with Bachs"}
+        </button>
+        <p className="shop-muted">{"You'll pay on Bachs' secure page by card or bank transfer, then come back here."}</p>
+      </form>
+    </div>
   );
 };
 

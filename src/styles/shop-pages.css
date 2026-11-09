@@ -1,0 +1,284 @@
+.shop-page {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 0 1rem 3rem;
+  display: grid;
+  gap: 2rem;
+}
+
+.shop-center {
+  text-align: center;
+}
+
+.shop-muted {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.shop-error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+.shop-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 1.5rem;
+  border: 0.5px solid #000;
+  background: #000;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.shop-button:hover:not(:disabled) {
+  background: #222;
+}
+
+.shop-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.shop-button.secondary {
+  background: #fff;
+  color: #000;
+}
+
+.shop-button.secondary:hover {
+  background: #f4f4f4;
+}
+
+.shop-form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 0.5px solid #000;
+  background: #fff;
+}
+
+.shop-form h1,
+.shop-form h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+}
+
+.shop-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.shop-form input,
+.shop-form textarea {
+  font: inherit;
+  font-size: 16px;
+  text-transform: none;
+  padding: 0.75rem;
+  border: 0.5px solid #000;
+  border-radius: 0;
+  background: #fff;
+  color: #000;
+}
+
+.shop-form input:focus,
+.shop-form textarea:focus {
+  outline: 2px solid #000;
+  outline-offset: -1px;
+}
+
+.shop-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 0.5px solid #000;
+}
+
+.shop-tabs button {
+  min-height: 44px;
+  border: 0;
+  background: #fff;
+  font: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.shop-tabs button[aria-pressed="true"] {
+  background: #000;
+  color: #fff;
+  font-weight: 700;
+}
+
+.checkout-form {
+  margin-top: 2rem;
+}
+
+.checkout-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 1rem 0;
+  border-top: 0.5px solid #000;
+  border-bottom: 0.5px solid #000;
+  text-transform: uppercase;
+}
+
+.checkout-total strong {
+  font-size: 1.25rem;
+}
+
+.order-details {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.order-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.order-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.order-header p {
+  margin: 0;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border: 0.5px solid #000;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.order-status.status-paid,
+.order-status.status-completed {
+  background: #000;
+  color: #fff;
+}
+
+.order-status.status-in_progress {
+  background: #fef3c7;
+}
+
+.order-status.status-payment_failed,
+.order-status.status-expired,
+.order-status.status-cancelled {
+  color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.order-next {
+  margin: 0;
+}
+
+.order-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.order-items li {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.order-items p {
+  margin: 0;
+}
+
+.order-items img,
+.order-noimage {
+  width: 56px;
+  height: 72px;
+  object-fit: cover;
+  object-position: top;
+  background: #f4f4f4;
+  display: block;
+}
+
+.order-meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.order-meta dt {
+  color: #666;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding-top: 0.15rem;
+}
+
+.order-meta dd {
+  margin: 0;
+}
+
+.order-keep {
+  margin: 0;
+}
+
+.account {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.account-orders {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.account-orders a {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border: 0.5px solid #000;
+  color: inherit;
+  text-decoration: none;
+}
+
+.account-orders a:hover {
+  background: #f8f8f8;
+}
+
+.account-orders a > span:first-child {
+  display: grid;
+  gap: 0.2rem;
+}
+
+@media (max-width: 560px) {
+  .account-orders a {
+    grid-template-columns: 1fr auto;
+  }
+
+  .account-orders .order-status {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}

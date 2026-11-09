@@ -11,6 +11,7 @@ interface Props {
   readonly onSaved: (product: Product) => void
   readonly onDeleted: (id: string) => void
   readonly notify: (text: string, isError?: boolean) => void
+  readonly onError: (error: unknown) => void
 }
 
 const fieldsOf = (product: Product | undefined): ProductFields => ({
@@ -23,9 +24,8 @@ const fieldsOf = (product: Product | undefined): ProductFields => ({
   visible: product?.visible ?? true
 })
 
-const messageOf = (error: unknown) => (error instanceof Error ? error.message : "Something went wrong")
 
-export function ProductEditor({ product, collections, onCollectionAdded, onSaved, onDeleted, notify }: Props) {
+export function ProductEditor({ product, collections, onCollectionAdded, onSaved, onDeleted, notify, onError }: Props) {
   const [fields, setFields] = useState(() => fieldsOf(product))
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -68,7 +68,7 @@ export function ProductEditor({ product, collections, onCollectionAdded, onSaved
       setAddingCollection(false)
       setNewCollection("")
     } catch (error) {
-      notify(messageOf(error), true)
+      onError(error)
     }
   }
 
@@ -83,7 +83,7 @@ export function ProductEditor({ product, collections, onCollectionAdded, onSaved
       onSaved(await api.addPhotos(product.id, files))
       notify(files.length === 1 ? "Photo added" : `${files.length} photos added`)
     } catch (error) {
-      notify(messageOf(error), true)
+      onError(error)
     } finally {
       setUploading(false)
     }
@@ -97,7 +97,7 @@ export function ProductEditor({ product, collections, onCollectionAdded, onSaved
     try {
       onSaved(await api.orderPhotos(product.id, ids))
     } catch (error) {
-      notify(messageOf(error), true)
+      onError(error)
     }
   }
 
@@ -106,7 +106,7 @@ export function ProductEditor({ product, collections, onCollectionAdded, onSaved
     try {
       onSaved(await api.removePhoto(product.id, imageId))
     } catch (error) {
-      notify(messageOf(error), true)
+      onError(error)
     }
   }
 
@@ -125,7 +125,7 @@ export function ProductEditor({ product, collections, onCollectionAdded, onSaved
         window.location.hash = `/products/${created.id}`
       }
     } catch (error) {
-      notify(messageOf(error), true)
+      onError(error)
     } finally {
       setSaving(false)
     }
@@ -139,7 +139,7 @@ export function ProductEditor({ product, collections, onCollectionAdded, onSaved
       notify("Product deleted")
       window.location.hash = "/products"
     } catch (error) {
-      notify(messageOf(error), true)
+      onError(error)
     }
   }
 

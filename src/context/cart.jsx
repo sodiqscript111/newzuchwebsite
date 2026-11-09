@@ -1,55 +1,18 @@
-// src/context/cart.jsx
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-const addCartItem = (cartItems, productToAdd) => {
-  console.log("STEP 1: Product to add:", JSON.stringify(productToAdd, null, 2));
+const STORAGE_KEY = "zuch-cart";
 
-  const existingCartItem = cartItems.find(
-    (cartItem) =>
-      cartItem.id === productToAdd.id &&
-      JSON.stringify(cartItem.options) === JSON.stringify(productToAdd.options)
-  );
+const lineKey = (item) =>
+  `${item.productId}|${item.size ?? ""}|${item.measurements ? JSON.stringify(item.measurements) : ""}`;
 
-  if (existingCartItem) {
-    console.log("STEP 2: Existing item found:", JSON.stringify(existingCartItem, null, 2));
-    return cartItems.map((cartItem) =>
-      cartItem.id === productToAdd.id &&
-      JSON.stringify(cartItem.options) === JSON.stringify(productToAdd.options)
-        ? { ...cartItem, quantity: cartItem.quantity + (productToAdd.quantity || 1) }
-        : cartItem
-    );
+const loadCart = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+    return Array.isArray(saved) ? saved.filter((item) => item && item.productId && item.quantity > 0) : [];
+  } catch {
+    return [];
   }
-
-  const imageUrl = Array.isArray(productToAdd.imageUrl) && productToAdd.imageUrl.length > 0
-    ? productToAdd.imageUrl
-    : productToAdd.imageUrl
-    ? [productToAdd.imageUrl]
-    : ["https://placehold.co/150"];
-
-  const newItem = { ...productToAdd, quantity: productToAdd.quantity || 1, imageUrl };
-  console.log("STEP 3: New item added:", JSON.stringify(newItem, null, 2));
-  return [...cartItems, newItem];
-};
-
-const removeCartItem = (cartItems, cartItemToRemove) => {
-  return cartItems.filter((cartItem) => cartItem.id !== cartItemToRemove.id);
-};
-
-const increaseCartItemQuantity = (cartItems, cartItemToIncrease) => {
-  return cartItems.map((cartItem) =>
-    cartItem.id === cartItemToIncrease.id
-      ? { ...cartItem, quantity: cartItem.quantity + 1 }
-      : cartItem
-  );
-};
-
-const decreaseCartItemQuantity = (cartItems, cartItemToDecrease) => {
-  return cartItems.map((cartItem) =>
-    cartItem.id === cartItemToDecrease.id
-      ? { ...cartItem, quantity: Math.max(cartItem.quantity - 1, 1) }
-      : cartItem
-  );
 };
 
 export const CartContext = createContext({
@@ -60,49 +23,55 @@ export const CartContext = createContext({
   removeItemFromCart: () => {},
   increaseQuantity: () => {},
   decreaseQuantity: () => {},
+  clearCart: () => {},
 });
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
-  const [cartCount, setCartCount] = useState(0);
-  const [cartTotal, setCartTotal] = useState(0);
+  const [cartItems, setCartItems] = useState(loadCart);
 
   useEffect(() => {
-    const newCartCount = cartItems.reduce((total, cartItem) => total + (cartItem.quantity || 0), 0);
-    const newCartTotal = cartItems.reduce(
-      (total, cartItem) => total + (cartItem.quantity || 0) * (cartItem.price || 0),
-      0
-    );
-
-    setCartCount(newCartCount);
-    setCartTotal(newCartTotal);
-    console.log("STEP 4: Updated cartItems:", JSON.stringify(cartItems, null, 2));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cartItems));
+    } catch {
+      // Private browsing can block storage; the cart still works for this visit.
+    }
   }, [cartItems]);
 
-  const addItemToCart = (productToAdd) => {
-    setCartItems((prevCartItems) => addCartItem(prevCartItems, productToAdd));
-  };
+  const addItemToCart = (item) =>
+    setCartItems((items) => {
+      const key = lineKey(item);
+      const existing = items.find((line) => lineKey(line) === key);
+      if (existing) {
+        return items.map((line) =>
+          lineKey(line) === key ? { ...line, quantity: Math.min(line.quantity + (item.quantity ?? 1), 20) } : line
+        );
+      }
+      return [...items, { ...item, quantity: item.quantity ?? 1 }];
+    });
 
-  const removeItemFromCart = (cartItemToRemove) => {
-    setCartItems((prevCartItems) => removeCartItem(prevCartItems, cartItemToRemove));
-  };
+  const removeItemFromCart = (item) => setCartItems((items) => items.filter((line) => lineKey(line) !== lineKey(item)));
 
-  const increaseQuantity = (cartItemToIncrease) => {
-    setCartItems((prevCartItems) => increaseCartItemQuantity(prevCartItems, cartItemToIncrease));
-  };
+  const increaseQuantity = (item) =>
+    setCartItems((items) =>
+      items.map((line) => (lineKey(line) === lineKey(item) ? { ...line, quantity: Math.min(line.quantity + 1, 20) } : line))
+    );
 
-  const decreaseQuantity = (cartItemToDecrease) => {
-    setCartItems((prevCartItems) => decreaseCartItemQuantity(prevCartItems, cartItemToDecrease));
-  };
+  const decreaseQuantity = (item) =>
+    setCartItems((items) =>
+      items.map((line) => (lineKey(line) === lineKey(item) ? { ...line, quantity: Math.max(line.quantity - 1, 1) } : line))
+    );
+
+  const clearCart = () => setCartItems([]);
 
   const value = {
     cartItems,
-    cartCount,
-    cartTotal,
+    cartCount: cartItems.reduce((total, item) => total + item.quantity, 0),
+    cartTotal: cartItems.reduce((total, item) => total + item.quantity * (item.price ?? 0), 0),
     addItemToCart,
     removeItemFromCart,
     increaseQuantity,
     decreaseQuantity,
+    clearCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
@@ -111,5 +80,7 @@ export const CartProvider = ({ children }) => {
 CartProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
+export const cartLineKey = lineKey;
 
 export default CartProvider;

@@ -9,7 +9,7 @@ const Elegant = () => {
 
   // Filter products for poise collection
   const poiseProducts = products
-    .filter((product) => product.collectionId === "poisecollection")
+    .filter((product) => product.collectionId === "poise")
     .map((item) => ({
       id: item.id,
       name: item.name || "Unknown",
@@ -45,7 +45,7 @@ const Elegant = () => {
             const slashedPrice = item.price * 1.2; // 20% higher slashed price
             return (
               <Link
-                to={`/product/poisecollection/${item.id}`}
+                to={`/product/poise/${item.id}`}
                 key={item.id}
                 className="product-card-container-elegant"
               >

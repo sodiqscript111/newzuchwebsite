@@ -1,191 +1,35 @@
-// src/context/ProductContext.jsx
-import React, { createContext, useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../utils/firebase";
+import { createContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { api } from "../api";
 
-export const ProductContext = createContext();
+export const ProductContext = createContext({ products: [], collections: [], loading: true, error: null });
+
+const toShopProduct = (product) => ({
+  ...product,
+  collectionId: product.collectionSlug,
+  imageUrl: product.images.map((image) => image.url),
+});
 
 export const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState([]);
-  const [collections, setCollections] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState({ products: [], collections: [], loading: true, error: null });
 
   useEffect(() => {
-    const fetchAllData = () => {
-      setLoading(true);
-      console.log("Setting up real-time listeners...");
-
-      // Listen to collections
-      const collectionsRef = collection(db, "collections");
-      const unsubscribeCollections = onSnapshot(collectionsRef, (collectionsSnapshot) => {
-        if (collectionsSnapshot.empty) {
-          console.log("No collections found in Firestore.");
-          setCollections([]);
-          setProducts([]);
-          setLoading(false);
-          return;
-        }
-
-        const productsList = [];
-        let defaultImage = "https://placehold.co/150"; // Final fallback
-
-        // Fetch all products in real-time
-        const collectionPromises = collectionsSnapshot.docs.map((doc) => {
-          const collectionId = doc.id;
-          const productsRef = collection(db, "collections", collectionId, "products");
-          return new Promise((resolve) => {
-            onSnapshot(productsRef, (productsSnapshot) => {
-              productsSnapshot.forEach((productDoc) => {
-                const data = productDoc.data();
-                const imageUrl = Array.isArray(data.imageUrl) && data.imageUrl.length > 0
-                  ? data.imageUrl[0]
-                  : data.imageUrl;
-                const product = {
-                  id: productDoc.id,
-                  collectionId: collectionId,
-                  name: data.name || "Unknown",
-                  price: data.price || 0,
-                  imageUrl: imageUrl || defaultImage, // Use default if empty
-                };
-                productsList.push(product);
-                // Update defaultImage if valid
-                if (imageUrl && !defaultImage.startsWith("https://placehold.co")) {
-                  defaultImage = imageUrl;
-                  console.log(`Found valid product image for fallback: ${defaultImage}`);
-                }
-              });
-              resolve();
-            }, (error) => {
-              console.error(`Error fetching products for ${collectionId}:`, error);
-              resolve();
-            });
-          });
-        });
-
-        // Wait for all product fetches to complete
-        Promise.all(collectionPromises).then(() => {
-          // Inject Y-Cut Kaftan manually
-          productsList.push({
-            id: "ycutkaftan",
-            collectionId: "customnative",
-            name: "Y-Cut Kaftan",
-            price: 80000,
-            imageUrl: [
-              "/images/y-cut-kaftan/1.jpeg",
-              "/images/y-cut-kaftan/2.jpeg",
-              "/images/y-cut-kaftan/3.jpeg",
-              "/images/y-cut-kaftan/4.jpeg",
-              "/images/y-cut-kaftan/5.jpeg"
-            ]
-          });
-
-          // Inject Jogger Set products manually
-          const joggerColors = [
-            { id: "jogger-ash", name: "Ash", file: "ash.png" },
-            { id: "jogger-brown", name: "Brown", file: "brown.png" },
-            { id: "jogger-navy", name: "Navy Blue", file: "navyblue.png" },
-            { id: "jogger-beige", name: "Beige", file: "beige.png" },
-            { id: "jogger-black", name: "Black", file: "black.png" },
-            { id: "jogger-green", name: "Green", file: "green.png" }
-          ];
-
-          joggerColors.forEach(color => {
-            productsList.push({
-              id: color.id,
-              collectionId: "joggerset",
-              name: color.name,
-              price: 45000, // Placeholder price
-              imageUrl: `/images/joggerset/${color.file}`
-            });
-          });
-
-          // Inject Alpha products manually
-          const alphaProducts = [
-            { id: "alpha-01", name: "Alpha 01", file: "alpha01.jpeg" },
-            { id: "alpha-02", name: "Alpha 02", file: "alpha02.jpeg" },
-            { id: "alpha-03", name: "Alpha 03", file: "alpha03.jpeg" }
-          ];
-
-          alphaProducts.forEach(prod => {
-            productsList.push({
-              id: prod.id,
-              collectionId: "alpha",
-              name: prod.name,
-              price: 45000, // Placeholder price
-              imageUrl: `/images/alpha/${prod.file}`
-            });
-          });
-
-          // Inject Vogue Jalabiya products manually
-          const vogueJalabiyaProducts = [
-            { id: "vogue-01", name: "Vogue Jalabiya 01", files: ["01_1.jpeg", "01_2.jpeg"] },
-            { id: "vogue-02", name: "Vogue Jalabiya 02", files: ["02_1.jpeg", "02_2.jpeg"] },
-            { id: "vogue-03", name: "Vogue Jalabiya 03", files: ["03_1.jpeg", "03_2.jpeg"] }
-          ];
-
-          vogueJalabiyaProducts.forEach(prod => {
-            productsList.push({
-              id: prod.id,
-              collectionId: "voguejalabiya",
-              name: prod.name,
-              price: 55000, // Placeholder price
-              imageUrl: prod.files.map(f => `/images/voguejalabiya/${f}`)
-            });
-          });
-
-          const collectionsData = collectionsSnapshot.docs.map((doc) => {
-            const collectionId = doc.id;
-            return {
-              id: collectionId,
-              name: `${collectionId.replace(/collection/i, "").replace(/^\w/, (c) => c.toUpperCase())} Collection`,
-              image: defaultImage, // Use a valid product image as default
-            };
-          });
-
-          // Inject Joggerset collection
-          collectionsData.push({
-            id: "joggerset",
-            name: "Jogger Set",
-            image: "/images/joggerset/black.png"
-          });
-
-          // Inject Alpha collection
-          collectionsData.push({
-            id: "alpha",
-            name: "Alpha",
-            image: "/images/alpha/alpha01.jpeg"
-          });
-
-          // Inject Vogue Jalabiya collection
-          collectionsData.push({
-            id: "voguejalabiya",
-            name: "Vogue Jalabiya",
-            image: "/images/voguejalabiya/01_1.jpeg"
-          });
-
-          console.log("Real-time Collections:", collectionsData);
-          console.log("Real-time Products:", productsList);
-          console.log("Default Image Used:", defaultImage);
-
-          setCollections(collectionsData);
-          setProducts(productsList);
-          setLoading(false);
-        });
-      }, (error) => {
-        console.error("Error fetching collections:", error);
-        setLoading(false);
+    let active = true;
+    Promise.all([api("/products"), api("/collections")])
+      .then(([products, collections]) => {
+        if (active) setState({ products: products.map(toShopProduct), collections, loading: false, error: null });
+      })
+      .catch((error) => {
+        if (active) setState((current) => ({ ...current, loading: false, error: error.message }));
       });
-
-      // Cleanup listener on unmount
-      return () => unsubscribeCollections();
+    return () => {
+      active = false;
     };
-
-    fetchAllData();
   }, []);
 
-  return (
-    <ProductContext.Provider value={{ products, collections, loading }}>
-      {children}
-    </ProductContext.Provider>
-  );
+  return <ProductContext.Provider value={state}>{children}</ProductContext.Provider>;
+};
+
+ProductProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

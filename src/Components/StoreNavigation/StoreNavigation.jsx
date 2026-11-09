@@ -1,8 +1,11 @@
-import React from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { ProductContext } from '../../context/productContext';
 import './StoreNavigation.css';
 
 const StoreNavigation = () => {
+    const { collections } = useContext(ProductContext);
+
     return (
         <nav className="navContainer">
             <ul className="navList">
@@ -11,20 +14,18 @@ const StoreNavigation = () => {
                 </li>
 
                 <li className="categoryTitle">Collections</li>
+                {collections.map((collection) => (
+                    <li className="navItem" key={collection.slug}>
+                        <Link to={`/shopall/${collection.slug}`} className="navLink">{collection.name}</Link>
+                    </li>
+                ))}
+
+                <li className="categoryTitle">Orders</li>
                 <li className="navItem">
-                    <Link to="/shopall/poisecollection" className="navLink">Poise</Link>
+                    <Link to="/account" className="navLink">My Account</Link>
                 </li>
                 <li className="navItem">
-                    <Link to="/shopall/customnative" className="navLink">Custom Native</Link>
-                </li>
-                <li className="navItem">
-                    <Link to="/shopall/joggerset" className="navLink">Jogger Set</Link>
-                </li>
-                <li className="navItem">
-                    <Link to="/shopall/alpha" className="navLink">Alpha</Link>
-                </li>
-                <li className="navItem">
-                    <Link to="/shopall/voguejalabiya" className="navLink">Vogue Jalabiya</Link>
+                    <Link to="/track" className="navLink">Track Order</Link>
                 </li>
 
                 <li className="categoryTitle">Information</li>

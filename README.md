@@ -1,8 +1,13 @@
-# React + Vite
+# Zuch
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Online shop for Zuch, running on Cloudflare.
 
-Currently, two official plugins are available:
+| Folder | What |
+| --- | --- |
+| `src/` | The shop customers use (React + Vite) |
+| `admin/` | The owner's admin at `/admin` (React + Vite) |
+| `backend/` | The Cloudflare Worker: API, payments, database and photos. **Start here.** |
+| `scripts/images/` | The product catalog snapshot the backend seeds from |
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Customers can browse, check out as a guest or with an account, pay with Bachs, and follow
+their orders. Setup, local running and deployment are in [backend/README.md](backend/README.md).
