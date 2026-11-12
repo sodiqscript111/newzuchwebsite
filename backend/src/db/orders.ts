@@ -15,7 +15,6 @@ interface OrderRow {
   status: OrderStatus
   total: number
   currency: "NGN"
-  bachs_checkout_id: string | null
   note: string
   created_at: string
   paid_at: string | null
@@ -165,15 +164,9 @@ export const createOrder = async (
   throw new Error("Could not create an order number")
 }
 
-export const setCheckoutId = (db: D1Database, orderId: string, checkoutId: string) =>
-  db.prepare("UPDATE orders SET bachs_checkout_id = ?, updated_at = ? WHERE id = ?").bind(checkoutId, nowIso(), orderId).run()
-
-export const findOrderRow = (db: D1Database, by: { number?: string; checkoutId?: string; id?: string }) => {
+export const findOrderRow = (db: D1Database, by: { number?: string; id?: string }) => {
   if (by.id) return db.prepare("SELECT * FROM orders WHERE id = ?").bind(by.id).first<OrderRow>()
   if (by.number) return db.prepare("SELECT * FROM orders WHERE number = ?").bind(by.number).first<OrderRow>()
-  if (by.checkoutId) {
-    return db.prepare("SELECT * FROM orders WHERE bachs_checkout_id = ?").bind(by.checkoutId).first<OrderRow>()
-  }
   return Promise.resolve(null)
 }
 
@@ -231,15 +224,15 @@ export const updateAdminOrder = async (
 
 const PAYABLE: ReadonlyArray<OrderStatus> = ["awaiting_payment", "payment_failed", "expired"]
 
-export const markOrderPaid = async (db: D1Database, row: OrderRow, chargeId: string | null) => {
+export const markOrderPaid = async (db: D1Database, row: OrderRow, paymentId: string | null) => {
   if (!PAYABLE.includes(row.status)) return false
   const now = nowIso()
   await db
     .prepare(
-      `UPDATE orders SET status = 'paid', paid_at = ?, bachs_charge_id = COALESCE(?, bachs_charge_id), updated_at = ?
+      `UPDATE orders SET status = 'paid', paid_at = ?, payment_id = COALESCE(?, payment_id), updated_at = ?
        WHERE id = ? AND status IN ('awaiting_payment', 'payment_failed', 'expired')`
     )
-    .bind(now, chargeId, now, row.id)
+    .bind(now, paymentId, now, row.id)
     .run()
   return true
 }

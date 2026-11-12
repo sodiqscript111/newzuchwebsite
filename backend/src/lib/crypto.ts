@@ -22,10 +22,8 @@ export const newOrderNumber = () => {
 
 export const sha256Hex = async (text: string) => toHex(await crypto.subtle.digest("SHA-256", encoder.encode(text)))
 
-export const hmacSha256Hex = async (secret: string, message: string) => {
-  const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, [
-    "sign"
-  ])
+export const hmacHex = async (hash: "SHA-256" | "SHA-512", secret: string, message: string) => {
+  const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash }, false, ["sign"])
   return toHex(await crypto.subtle.sign("HMAC", key, encoder.encode(message)))
 }
 

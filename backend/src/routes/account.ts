@@ -4,6 +4,7 @@ import { checkLogin, createCustomer, getCustomer } from "../db/customers.ts"
 import { getCustomerOrder, listCustomerOrders } from "../db/orders.ts"
 import { readJson } from "../lib/http.ts"
 import { endSession, readSession, startSession } from "../lib/session.ts"
+import { syncPayment } from "../payments.ts"
 
 export const account = newApp()
 
@@ -43,6 +44,7 @@ account.get("/orders", async (c) => {
 account.get("/orders/:number", async (c) => {
   const session = await readSession(c, "customer")
   if (!session?.customerId) return c.json({ message: "Sign in to see your orders" }, 401)
+  await syncPayment(c.env, c.req.param("number"))
   const order = await getCustomerOrder(c.env.DB, c.req.param("number"), session.customerId)
   return order ? c.json(order) : c.json({ message: "Order not found" }, 404)
 })

@@ -43,5 +43,5 @@ dev.post("/checkout/:orderId/:result", async (c) => {
   if (!order) return c.notFound()
   if (c.req.param("result") === "paid") await markOrderPaid(c.env.DB, order, "dev")
   else await markOrderUnpaid(c.env.DB, order, "payment_failed")
-  return c.redirect(`${safeReturn(c.req.query("return"))}?checkout_id=dev`, 303)
+  return c.redirect(`${safeReturn(c.req.query("return"))}?reference=dev`, 303)
 })

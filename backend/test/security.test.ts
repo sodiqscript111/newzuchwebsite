@@ -25,11 +25,11 @@ describe("requests from other sites", () => {
     expect(response.status).toBe(401)
   })
 
-  it("lets Bachs webhooks through from anywhere", async () => {
-    const response = await call("/api/webhooks/bachs", {
+  it("lets Paystack webhooks through from anywhere", async () => {
+    const response = await call("/api/webhooks/paystack", {
       method: "POST",
       body: {},
-      headers: { origin: "https://bachs.io" }
+      headers: { origin: "https://paystack.com" }
     })
     expect(response.status).toBe(401)
   })

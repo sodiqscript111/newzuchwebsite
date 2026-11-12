@@ -14,7 +14,7 @@ const OrderPage = () => {
   const { clearCart } = useContext(CartContext);
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
-  const returnedFromPayment = searchParams.has("checkout_id");
+  const returnedFromPayment = searchParams.has("reference") || searchParams.has("trxref");
 
   useEffect(() => {
     if (returnedFromPayment) clearCart();

@@ -1,10 +1,11 @@
 import type { Context } from "hono"
 import { CheckoutInput, OrderLookup } from "../../model/order.ts"
 import { type AppEnv, newApp } from "../app.ts"
-import { BachsError, createCheckoutSession } from "../bachs.ts"
-import { createOrder, getOrderByEmail, getOrderByToken, priceCart, setCheckoutId } from "../db/orders.ts"
+import { createOrder, getOrderByEmail, getOrderByToken, priceCart } from "../db/orders.ts"
 import { readJson } from "../lib/http.ts"
 import { readSession } from "../lib/session.ts"
+import { syncPayment } from "../payments.ts"
+import { initializeTransaction, PaystackError } from "../paystack.ts"
 
 export const checkout = newApp()
 
@@ -15,8 +16,8 @@ checkout.post("/checkout", async (c) => {
   const priced = await priceCart(c.env.DB, input)
   if ("error" in priced) return c.json({ message: priced.error }, 409)
 
-  const usingPretendCheckout = !c.env.BACHS_SECRET_KEY && c.env.ENVIRONMENT === "development"
-  if (!c.env.BACHS_SECRET_KEY && !usingPretendCheckout) {
+  const usingPretendCheckout = !c.env.PAYSTACK_SECRET_KEY && c.env.ENVIRONMENT === "development"
+  if (!c.env.PAYSTACK_SECRET_KEY && !usingPretendCheckout) {
     return c.json({ message: "Payments aren't set up yet. Please try again later." }, 503)
   }
 
@@ -39,30 +40,31 @@ checkout.post("/checkout", async (c) => {
 
   const base = publicUrl(c)
   try {
-    const bachs = await createCheckoutSession(c.env, {
-      id: order.id,
-      number: order.number,
+    const payment = await initializeTransaction(c.env, {
+      reference: order.number,
+      email: input.contact.email,
       total: priced.total,
-      contact: input.contact,
-      successUrl: `${base}${orderPath}`,
-      cancelUrl: `${base}/cart`
+      callbackUrl: `${base}${orderPath}`,
+      cancelUrl: `${base}/cart`,
+      orderId: order.id
     })
-    await setCheckoutId(c.env.DB, order.id, bachs.checkoutId)
-    return c.json({ number: order.number, orderPath, checkoutUrl: bachs.checkoutUrl })
+    return c.json({ number: order.number, orderPath, checkoutUrl: payment.authorizationUrl })
   } catch (error) {
-    if (!(error instanceof BachsError) && !(error instanceof DOMException)) throw error
-    console.error("Bachs checkout failed", order.number, String(error))
+    if (!(error instanceof PaystackError) && !(error instanceof DOMException)) throw error
+    console.error("Paystack initialize failed", order.number, String(error))
     return c.json({ message: "We couldn't reach the payment service. Please try again." }, 502)
   }
 })
 
 checkout.get("/orders/:number/:token", async (c) => {
+  await syncPayment(c.env, c.req.param("number"))
   const order = await getOrderByToken(c.env.DB, c.req.param("number"), c.req.param("token"))
   return order ? c.json(order) : c.json({ message: "Order not found" }, 404)
 })
 
 checkout.post("/orders/lookup", async (c) => {
   const { number, email } = await readJson(c, OrderLookup)
+  await syncPayment(c.env, number)
   const order = await getOrderByEmail(c.env.DB, number, email)
   return order ? c.json(order) : c.json({ message: "We couldn't find an order with that number and email" }, 404)
 })

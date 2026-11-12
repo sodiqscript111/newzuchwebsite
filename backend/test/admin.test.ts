@@ -1,6 +1,6 @@
 import { env } from "cloudflare:workers"
 import { describe, expect, it } from "vitest"
-import { call, contact, postWebhook, seedProduct } from "./helpers.ts"
+import { call, chargeSuccess, contact, postWebhook, seedProduct } from "./helpers.ts"
 
 const signIn = async () =>
   (await call("/api/admin/login", { method: "POST", body: { password: "admin-password" } })).cookie
@@ -96,11 +96,7 @@ describe("admin", () => {
       method: "POST",
       body: { items: [{ productId: product.id, quantity: 1, size: "M" }], contact }
     })).json
-    await postWebhook({
-      id: `evt_${crypto.randomUUID()}`,
-      type: "collection.succeeded",
-      data: { reference: paid.number, status: "SUCCEEDED", amount: "45000.00", currency: "NGN" }
-    })
+    await postWebhook(chargeSuccess(paid.number, 45000))
 
     const orders = (await call("/api/admin/orders", { cookie })).json
     const unpaidId = orders.find((o: { number: string }) => o.number === unpaid.number).id

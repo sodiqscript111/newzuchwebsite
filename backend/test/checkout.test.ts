@@ -83,40 +83,97 @@ describe("checkout", () => {
     expect(refused.status).toBe(503)
   })
 
-  it("creates a Bachs checkout session with the server's total", async () => {
+  it("starts a Paystack transaction for the server's total, in kobo", async () => {
     const product = await seedProduct({ price: 45000 })
     const fetchMock = vi.fn(async () =>
-      Response.json({ checkout_id: "chk_test123", checkout_url: "https://sandbox-checkout.bachs.io/c/abc" }, { status: 201 })
+      Response.json({
+        status: true,
+        message: "Authorization URL created",
+        data: { authorization_url: "https://checkout.paystack.com/abc123", access_code: "abc123", reference: "x" }
+      })
     )
     vi.stubGlobal("fetch", fetchMock)
     const { status, json } = await checkoutWith([{ productId: product.id, quantity: 2, size: "M" }], {
-      BACHS_SECRET_KEY: "sk_sandbox_test",
+      PAYSTACK_SECRET_KEY: "sk_test_key",
       ENVIRONMENT: "production"
     })
     expect(status).toBe(200)
-    expect(json.checkoutUrl).toBe("https://sandbox-checkout.bachs.io/c/abc")
+    expect(json.checkoutUrl).toBe("https://checkout.paystack.com/abc123")
 
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit]
-    expect(url).toBe("https://sandbox-api.bachs.io/v1/checkout-sessions")
-    const headers = new Headers(init.headers)
-    expect(headers.get("authorization")).toBe("Bearer sk_sandbox_test")
-    expect(headers.get("idempotency-key")).toMatch(/^checkout-/)
+    expect(url).toBe("https://api.paystack.co/transaction/initialize")
+    expect(init.method).toBe("POST")
+    expect(new Headers(init.headers).get("authorization")).toBe("Bearer sk_test_key")
     const body = JSON.parse(init.body as string)
-    expect(body.pricing).toEqual({ currency: "NGN", amount: "90000.00" })
+    expect(body.amount).toBe("9000000")
+    expect(body.currency).toBe("NGN")
     expect(body.reference).toBe(json.number)
-    expect(body.success_url).toBe(`https://shop.test${json.orderPath}`)
-    expect(body.cancel_url).toBe("https://shop.test/cart")
-    expect(body.customer.email).toBe(contact.email)
+    expect(body.email).toBe(contact.email)
+    expect(body.callback_url).toBe(`https://shop.test${json.orderPath}`)
+    expect(body.metadata.cancel_action).toBe("https://shop.test/cart")
   })
 
-  it("tells the customer to retry when Bachs fails", async () => {
+  it("tells the customer to retry when Paystack fails", async () => {
     const product = await seedProduct()
     vi.stubGlobal("fetch", vi.fn(async () => new Response("down", { status: 500 })))
     const { status, json } = await checkoutWith([{ productId: product.id, quantity: 1, size: "M" }], {
-      BACHS_SECRET_KEY: "sk_sandbox_test"
+      PAYSTACK_SECRET_KEY: "sk_test_key"
     })
     expect(status).toBe(502)
     expect(json.message).toMatch(/payment service/)
+  })
+})
+
+describe("checking with Paystack when the customer comes back", () => {
+  const placeOrder = async () => {
+    const product = await seedProduct({ price: 45000 })
+    const fetchMock = vi.fn(async () =>
+      Response.json({ status: true, data: { authorization_url: "https://checkout.paystack.com/x", reference: "x" } })
+    )
+    vi.stubGlobal("fetch", fetchMock)
+    const { json } = await checkoutWith([{ productId: product.id, quantity: 1, size: "M" }], {
+      PAYSTACK_SECRET_KEY: "sk_test_key"
+    })
+    return json as { number: string; orderPath: string }
+  }
+
+  const paystackSays = (transaction: Record<string, unknown>) =>
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ status: true, message: "Verification successful", data: transaction })))
+
+  it("marks the order paid when Paystack confirms the full amount", async () => {
+    const order = await placeOrder()
+    paystackSays({ id: 4099260516, status: "success", reference: order.number, amount: 4500000, currency: "NGN" })
+    const seen = await call(`/api${order.orderPath}`, {}, { PAYSTACK_SECRET_KEY: "sk_test_key" })
+    expect(seen.json.status).toBe("paid")
+    const [url] = (fetch as unknown as { mock: { calls: [string][] } }).mock.calls[0]!
+    expect(url).toBe(`https://api.paystack.co/transaction/verify/${order.number}`)
+  })
+
+  it("doesn't trust a short amount or an unfinished payment", async () => {
+    const short = await placeOrder()
+    paystackSays({ id: 1, status: "success", reference: short.number, amount: 100, currency: "NGN" })
+    expect((await call(`/api${short.orderPath}`, {}, { PAYSTACK_SECRET_KEY: "sk_test_key" })).json.status)
+      .toBe("awaiting_payment")
+
+    const abandoned = await placeOrder()
+    paystackSays({ id: 2, status: "abandoned", reference: abandoned.number, amount: 4500000, currency: "NGN" })
+    expect((await call(`/api${abandoned.orderPath}`, {}, { PAYSTACK_SECRET_KEY: "sk_test_key" })).json.status)
+      .toBe("awaiting_payment")
+  })
+
+  it("records a failed payment", async () => {
+    const order = await placeOrder()
+    paystackSays({ id: 3, status: "failed", reference: order.number, amount: 4500000, currency: "NGN" })
+    expect((await call(`/api${order.orderPath}`, {}, { PAYSTACK_SECRET_KEY: "sk_test_key" })).json.status)
+      .toBe("payment_failed")
+  })
+
+  it("still shows the order when Paystack can't be reached", async () => {
+    const order = await placeOrder()
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("down", { status: 503 })))
+    const seen = await call(`/api${order.orderPath}`, {}, { PAYSTACK_SECRET_KEY: "sk_test_key" })
+    expect(seen.status).toBe(200)
+    expect(seen.json.status).toBe("awaiting_payment")
   })
 })
 

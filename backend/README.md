@@ -8,7 +8,7 @@ One Cloudflare Worker runs the whole shop:
 - `/media/*`: product photos from R2
 
 Data lives in **D1** (SQLite) and photos in **R2**. Payments go through
-[Bachs](https://docs.bachs.io) hosted checkout.
+[Paystack](https://paystack.com/docs) checkout.
 
 ## Run it on your computer
 
@@ -20,9 +20,10 @@ npm run build:sites                 # builds the shop and admin into public/
 npm run dev                         # http://localhost:8787 (admin at /admin)
 ```
 
-Without Bachs keys in `.dev.vars`, checkout uses a **pretend checkout** at
+Without `PAYSTACK_SECRET_KEY` in `.dev.vars`, checkout uses a **pretend checkout** at
 `/api/dev/checkout/...` where you can make a payment succeed or fail. It only exists when
-`ENVIRONMENT=development`.
+`ENVIRONMENT=development`. With a Paystack test key (`sk_test_...`), real test payments work
+locally too.
 
 While working on the shop or admin screens, run `npm run dev` here and `npm run dev` in
 the repo root (shop, port 5173) or in `../admin` (port 5174) for live reloading. Both
@@ -45,12 +46,16 @@ send `/api` and `/media` to this Worker.
 
 1. The cart lives in the browser. At checkout it sends product IDs, quantities, sizes or
    measurements, and delivery details. **Prices come from the database**, never the browser.
-2. The Worker saves the order as `awaiting_payment`, creates a Bachs checkout session for
-   the total, and sends the customer to Bachs.
-3. Bachs sends the customer back to their private order page,
-   `/orders/<number>/<secret>`, which updates by itself.
-4. Bachs calls `POST /api/webhooks/bachs`. The Worker checks the signature and that the
-   amount covers the order, then marks it `paid`. **Only this webhook marks orders paid.**
+2. The Worker saves the order as `awaiting_payment` and starts a Paystack transaction for the
+   total in kobo, using the order number as the reference. The customer pays on Paystack.
+3. Paystack sends the customer back to their private order page,
+   `/orders/<number>/<secret>`. Opening it asks Paystack to verify the payment, and the page
+   updates by itself.
+4. Paystack also calls `POST /api/webhooks/paystack` with `charge.success`. The Worker checks
+   the signature.
+
+An order only becomes `paid` when Paystack confirms it, through the webhook or the verify
+call, for the full amount in naira. Nothing the browser sends can mark it paid.
 5. The owner moves paid orders to `in_progress` and `completed` in the admin.
 
 Customers find orders through the link from step 3, with their order number and email at
@@ -59,15 +64,17 @@ Customers find orders through the link from step 3, with their order number and 
 | Status | Meaning |
 | --- | --- |
 | `awaiting_payment` | Order placed, payment not confirmed yet |
-| `paid` | Bachs confirmed payment ("Not started" in the admin) |
+| `paid` | Paystack confirmed payment ("Not started" in the admin) |
 | `in_progress` | Being made |
 | `completed` | Done |
 | `cancelled` | Cancelled by the owner |
-| `payment_failed`, `expired` | Payment failed, or the 60-minute payment window closed |
+| `payment_failed` | Paystack reported the payment failed |
+
+Orders a customer abandons stay `awaiting_payment` and appear under "Unpaid" in the admin.
 
 ## Put it on Cloudflare
 
-You need a Cloudflare account and a Bachs account.
+You need a Cloudflare account and a Paystack account.
 
 1. `npx wrangler login`
 2. Create the database and copy its ID into `database_id` in `wrangler.jsonc`:
@@ -77,41 +84,39 @@ You need a Cloudflare account and a Bachs account.
 5. Set the secrets (each command asks for the value):
    ```bash
    npx wrangler secret put ADMIN_PASSWORD
-   npx wrangler secret put BACHS_SECRET_KEY
-   npx wrangler secret put BACHS_WEBHOOK_SECRET
+   npx wrangler secret put PAYSTACK_SECRET_KEY
+   npx wrangler secret put PAYSTACK_WEBHOOK_SECRET
    ```
 6. `npm run deploy`. Wrangler prints the address, like `https://zuch.<you>.workers.dev`.
    Set `PUBLIC_URL` to it in `wrangler.jsonc` (or your own domain later) and deploy again.
-7. In the Bachs Developer Portal, add a webhook endpoint at
-   `<PUBLIC_URL>/api/webhooks/bachs` for `collection.succeeded`, `checkout.completed`,
-   `collection.failed` and `checkout.expired`. Its signing secret is `BACHS_WEBHOOK_SECRET`.
+7. In the Paystack dashboard, set the webhook URL to
+   `<PUBLIC_URL>/api/webhooks/paystack`. If Paystack gives you a webhook signing secret
+   (`whsec_...`, under **Developers > API configuration**), store it as
+   `PAYSTACK_WEBHOOK_SECRET`. Without one, webhooks are checked with your secret key instead.
 
-Start with a **sandbox** key (`sk_sandbox_...`) and `BACHS_API_URL` set to
-`https://sandbox-api.bachs.io`. Any card number works there except `4000000000000002`
-(declined). To go live, put a `sk_live_...` key in `BACHS_SECRET_KEY` and change
-`BACHS_API_URL` to `https://api.bachs.io`.
-
-Bachs refuses `localhost` return addresses, so real Bachs payments only work once the
-Worker has a public address.
+Start with your **test** secret key (`sk_test_...`). Paystack's test card
+`4084 0840 8408 4081` (any future expiry, CVV `408`) succeeds, and `4084 0800 0000 5408`
+(CVV `001`) is declined. To go live, put your `sk_live_...` key in `PAYSTACK_SECRET_KEY` and set
+the live webhook URL in Paystack.
 
 ## Settings
 
 | Name | Where | What |
 | --- | --- | --- |
 | `ENVIRONMENT` | `vars` | `production`, or `development` in `.dev.vars` |
-| `PUBLIC_URL` | `vars` | The shop's public address, used for Bachs return links |
-| `BACHS_API_URL` | `vars` | Bachs sandbox or live API |
+| `PUBLIC_URL` | `vars` | The shop's public address, used for Paystack return links |
 | `BAYSE_URL` | `vars` | Used by `/api/health/bayse` |
 | `ADMIN_PASSWORD` | secret | Password for `/admin` |
-| `BACHS_SECRET_KEY` | secret | Bachs API key |
-| `BACHS_WEBHOOK_SECRET` | secret | Signing secret of the Bachs webhook endpoint |
+| `PAYSTACK_SECRET_KEY` | secret | Paystack secret key (`sk_test_...` or `sk_live_...`) |
+| `PAYSTACK_WEBHOOK_SECRET` | secret | Paystack webhook signing secret (`whsec_...`), optional |
 
 ## Code
 
 - `src/index.ts`: routes and request checks
 - `src/routes/`: shop, checkout and orders, account, admin, webhooks, media, dev
 - `src/db/`: D1 queries for the catalog, orders and customers
-- `src/bachs.ts`: Bachs checkout sessions and webhook signatures
+- `src/paystack.ts`: starting and verifying Paystack payments, and webhook signatures
+- `src/payments.ts`: asks Paystack about an unpaid order when the customer opens it
 - `src/lib/`: passwords (PBKDF2), sessions (cookies with hashed tokens), IDs
 - `model/`: Zod schemas for products, orders and accounts
 - `migrations/`: the database tables

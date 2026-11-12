@@ -3,7 +3,8 @@ ENVIRONMENT=development
 PUBLIC_URL=http://localhost:8787
 ADMIN_PASSWORD=change-me-locally
 
-# Leave the Bachs keys empty to use the pretend checkout at /api/dev/checkout.
-# Bachs refuses localhost return addresses, so real sandbox payments need a public URL.
-BACHS_SECRET_KEY=
-BACHS_WEBHOOK_SECRET=
+# Leave PAYSTACK_SECRET_KEY empty to use the pretend checkout at /api/dev/checkout.
+# With a test key (sk_test_...), real Paystack test payments work locally too.
+PAYSTACK_SECRET_KEY=
+# The webhook signing secret (whsec_...) from Developers > API configuration, if you have one.
+PAYSTACK_WEBHOOK_SECRET=

@@ -14,8 +14,8 @@ export default defineConfig(async () => ({
           ENVIRONMENT: "development",
           PUBLIC_URL: "https://shop.test",
           ADMIN_PASSWORD: "admin-password",
-          BACHS_SECRET_KEY: "",
-          BACHS_WEBHOOK_SECRET: "whsec_test"
+          PAYSTACK_SECRET_KEY: "",
+          PAYSTACK_WEBHOOK_SECRET: "whsec_test"
         }
       }
     })

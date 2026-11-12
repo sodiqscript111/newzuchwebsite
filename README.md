@@ -9,5 +9,5 @@ Online shop for Zuch, running on Cloudflare.
 | `backend/` | The Cloudflare Worker: API, payments, database and photos. **Start here.** |
 | `scripts/images/` | The product catalog snapshot the backend seeds from |
 
-Customers can browse, check out as a guest or with an account, pay with Bachs, and follow
+Customers can browse, check out as a guest or with an account, pay with Paystack, and follow
 their orders. Setup, local running and deployment are in [backend/README.md](backend/README.md).

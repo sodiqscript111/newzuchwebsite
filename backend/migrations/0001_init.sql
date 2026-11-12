@@ -56,8 +56,7 @@ CREATE TABLE orders (
   )),
   total INTEGER NOT NULL,
   currency TEXT NOT NULL DEFAULT 'NGN',
-  bachs_checkout_id TEXT,
-  bachs_charge_id TEXT,
+  payment_id TEXT,
   note TEXT NOT NULL DEFAULT '',
   created_at TEXT NOT NULL,
   paid_at TEXT,
@@ -65,7 +64,6 @@ CREATE TABLE orders (
 );
 CREATE INDEX orders_by_customer ON orders (customer_id, created_at);
 CREATE INDEX orders_by_status ON orders (status, created_at);
-CREATE INDEX orders_by_checkout ON orders (bachs_checkout_id);
 
 CREATE TABLE order_items (
   id TEXT PRIMARY KEY,

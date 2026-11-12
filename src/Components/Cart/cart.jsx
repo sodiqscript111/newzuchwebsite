@@ -112,9 +112,9 @@ const Cart = () => {
         </div>
         {error && <p className="shop-error" role="alert">{error}</p>}
         <button type="submit" className="shop-button" disabled={submitting}>
-          {submitting ? "Taking you to payment…" : "Pay securely with Bachs"}
+          {submitting ? "Taking you to payment…" : "Pay securely with Paystack"}
         </button>
-        <p className="shop-muted">{"You'll pay on Bachs' secure page by card or bank transfer, then come back here."}</p>
+        <p className="shop-muted">{"You'll pay on Paystack's secure page by card, bank transfer or USSD, then come back here."}</p>
       </form>
     </div>
   );

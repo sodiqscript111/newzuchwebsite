@@ -28,7 +28,6 @@
   "vars": {
     "ENVIRONMENT": "production",
     "PUBLIC_URL": "",
-    "BACHS_API_URL": "https://sandbox-api.bachs.io",
     "BAYSE_URL": "https://relay.bayse.markets"
   }
 }

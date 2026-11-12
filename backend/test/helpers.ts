@@ -1,6 +1,6 @@
 import { env } from "cloudflare:workers"
 import app from "../src/index.ts"
-import { hmacSha256Hex } from "../src/lib/crypto.ts"
+import { hmacHex } from "../src/lib/crypto.ts"
 
 export type TestEnv = typeof env
 
@@ -64,22 +64,39 @@ export const contact = {
   address: "1 Test Street, Lagos"
 }
 
-export const signWebhook = async (payload: unknown, options: { secret?: string; timestamp?: number } = {}) => {
+type SignOptions = { secret?: string; timestamp?: number; style?: "signing-secret" | "secret-key" }
+
+export const signWebhook = async (
+  payload: unknown,
+  options: SignOptions = {}
+): Promise<{ body: string; headers: Record<string, string> }> => {
   const body = JSON.stringify(payload)
+  if (options.style === "secret-key") {
+    const signature = await hmacHex("SHA-512", options.secret ?? "sk_test_key", body)
+    return { body, headers: { "x-paystack-signature": signature, "content-type": "application/json" } }
+  }
   const timestamp = String(options.timestamp ?? Math.floor(Date.now() / 1000))
-  const signature = await hmacSha256Hex(options.secret ?? "whsec_test", `${timestamp}.${body}`)
-  return { body, headers: { "x-bachs-signature-v2": `t=${timestamp},v1=${signature}`, "content-type": "application/json" } }
+  const signature = await hmacHex("SHA-512", options.secret ?? "whsec_test", `${timestamp}.${body}`)
+  return {
+    body,
+    headers: { "paystack-signature": `t=${timestamp},v1=whk_test:${signature}`, "content-type": "application/json" }
+  }
 }
 
-export const postWebhook = async (payload: unknown, options: { secret?: string; timestamp?: number } = {}) => {
+export const postWebhook = async (payload: unknown, options: SignOptions = {}, overrides: Partial<TestEnv> = {}) => {
   const signed = await signWebhook(payload, options)
   const response = await app.request(
-    "/api/webhooks/bachs",
+    "/api/webhooks/paystack",
     { method: "POST", headers: signed.headers, body: signed.body },
-    env
+    { ...env, ...overrides }
   )
   return response.status
 }
+
+export const chargeSuccess = (reference: string, naira: number, id = Math.floor(Math.random() * 1e9)) => ({
+  event: "charge.success",
+  data: { id, status: "success", reference, amount: naira * 100, currency: "NGN", channel: "card" }
+})
 
 export const orderStatus = async (number: string) =>
   (await env.DB.prepare("SELECT status, note FROM orders WHERE number = ?").bind(number).first<{
