@@ -36,7 +36,7 @@ describe("shop", () => {
     await env.MEDIA.put("products/test/photo.jpg", new Uint8Array([1, 2, 3]), {
       httpMetadata: { contentType: "image/jpeg" }
     })
-    const response = await (await import("../src/index.ts")).default.request("/media/products/test/photo.jpg", {}, env)
+    const response = await (await import("../src/index.ts")).app.request("/media/products/test/photo.jpg", {}, env)
     expect(response.status).toBe(200)
     expect(response.headers.get("content-type")).toBe("image/jpeg")
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]))

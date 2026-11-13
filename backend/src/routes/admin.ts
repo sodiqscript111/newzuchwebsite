@@ -18,6 +18,7 @@ import {
 import { listAdminOrders, updateAdminOrder } from "../db/orders.ts"
 import { sha256Hex, timingSafeEqual } from "../lib/crypto.ts"
 import { readJson } from "../lib/http.ts"
+import { syncRecentPayments } from "../payments.ts"
 import { endSession, readSession, startSession } from "../lib/session.ts"
 
 export const admin = newApp()
@@ -43,7 +44,10 @@ admin.use("*", async (c, next) => {
 
 admin.get("/me", (c) => c.json({ signedIn: true }))
 
-admin.get("/orders", async (c) => c.json(await listAdminOrders(c.env.DB)))
+admin.get("/orders", async (c) => {
+  await syncRecentPayments(c.env)
+  return c.json(await listAdminOrders(c.env.DB))
+})
 
 admin.patch("/orders/:id", async (c) => {
   const result = await updateAdminOrder(c.env.DB, c.req.param("id"), await readJson(c, AdminOrderUpdate))

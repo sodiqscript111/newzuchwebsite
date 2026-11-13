@@ -1,5 +1,6 @@
 import { newApp } from "../app.ts"
-import { addOrderNote, findOrderRow, markOrderPaid } from "../db/orders.ts"
+import { addOrderNote, findOrderRow } from "../db/orders.ts"
+import { confirmPaid } from "../payments.ts"
 import { nowIso } from "../lib/http.ts"
 import { coversOrder, Transaction, verifyWebhook, WebhookEvent } from "../paystack.ts"
 
@@ -31,7 +32,7 @@ webhooks.post("/paystack", async (c) => {
   if (order) {
     const transaction = Transaction.safeParse(data)
     if (transaction.success && coversOrder(transaction.data, order.total)) {
-      await markOrderPaid(c.env.DB, order, data.id ? String(data.id) : null)
+      await confirmPaid(c.env, order, data.id ? String(data.id) : null)
     } else {
       await addOrderNote(
         c.env.DB,

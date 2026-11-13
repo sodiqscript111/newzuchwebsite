@@ -15,7 +15,10 @@ export default defineConfig(async () => ({
           PUBLIC_URL: "https://shop.test",
           ADMIN_PASSWORD: "admin-password",
           PAYSTACK_SECRET_KEY: "",
-          PAYSTACK_WEBHOOK_SECRET: "whsec_test"
+          PAYSTACK_WEBHOOK_SECRET: "whsec_test",
+          RESEND_API_KEY: "",
+          EMAIL_FROM: "Zuch <orders@shop.test>",
+          OWNER_EMAIL: "owner@shop.test"
         }
       }
     })

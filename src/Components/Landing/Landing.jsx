@@ -31,14 +31,20 @@ const Landing = () => {
   return (
     <div className="landing-page">
       {/* Image slideshow */}
-      {allImages.map((img, index) => (
-        <img
-          key={index}
-          src={img}
-          alt=""
-          className={`landing-image ${index === currentIndex ? 'active' : ''}`}
-        />
-      ))}
+      {/* Only the photo fading out, the one showing and the next one are on the page. */}
+      {allImages.map((img, index) => {
+        const total = allImages.length;
+        const near = [currentIndex, (currentIndex + 1) % total, (currentIndex - 1 + total) % total];
+        return near.includes(index) ? (
+          <img
+            key={index}
+            src={img}
+            alt=""
+            decoding="async"
+            className={`landing-image ${index === currentIndex ? 'active' : ''}`}
+          />
+        ) : null;
+      })}
 
       {/* Gradient overlay for readability */}
       <div className="landing-gradient"></div>

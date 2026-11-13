@@ -6,6 +6,7 @@ export const AccountContext = createContext({
   customer: null,
   loading: true,
   register: async () => {},
+  refresh: async () => {},
   login: async () => {},
   logout: async () => {},
 });
@@ -14,12 +15,18 @@ export const AccountProvider = ({ children }) => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const refresh = useCallback(
+    () =>
+      api("/account")
+        .then((data) => setCustomer(data?.customer ?? null))
+        .catch(() => setCustomer(null))
+        .finally(() => setLoading(false)),
+    []
+  );
+
   useEffect(() => {
-    api("/account")
-      .then((data) => setCustomer(data?.customer ?? null))
-      .catch(() => setCustomer(null))
-      .finally(() => setLoading(false));
-  }, []);
+    refresh();
+  }, [refresh]);
 
   const register = useCallback(async (details) => {
     const data = await api("/account/register", { method: "POST", body: details });
@@ -39,7 +46,7 @@ export const AccountProvider = ({ children }) => {
   }, []);
 
   return (
-    <AccountContext.Provider value={{ customer, loading, register, login, logout }}>{children}</AccountContext.Provider>
+    <AccountContext.Provider value={{ customer, loading, register, login, logout, refresh }}>{children}</AccountContext.Provider>
   );
 };
 

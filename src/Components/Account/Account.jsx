@@ -65,6 +65,11 @@ const SignIn = () => {
       <button type="submit" className="shop-button" disabled={busy}>
         {busy ? "One moment…" : mode === "login" ? "Sign in" : "Create account"}
       </button>
+      {mode === "login" && (
+        <p className="shop-muted">
+          <Link to="/forgot-password">Forgot your password?</Link>
+        </p>
+      )}
       <p className="shop-muted">
         Ordered as a guest? <Link to="/track">Track an order</Link> with its number and email.
       </p>

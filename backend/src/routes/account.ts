@@ -1,6 +1,7 @@
-import { Login, Register } from "../../model/account.ts"
+import { ForgotPassword, Login, Register, ResetPassword } from "../../model/account.ts"
 import { newApp } from "../app.ts"
-import { checkLogin, createCustomer, getCustomer } from "../db/customers.ts"
+import { checkLogin, createCustomer, createPasswordReset, getCustomer, resetPassword } from "../db/customers.ts"
+import { sendPasswordResetEmail } from "../email.ts"
 import { getCustomerOrder, listCustomerOrders } from "../db/orders.ts"
 import { readJson } from "../lib/http.ts"
 import { endSession, readSession, startSession } from "../lib/session.ts"
@@ -20,6 +21,24 @@ account.post("/login", async (c) => {
   const { email, password } = await readJson(c, Login)
   const customer = await checkLogin(c.env.DB, email, password)
   if (!customer) return c.json({ message: "That email and password don't match" }, 401)
+  await startSession(c, "customer", customer.id)
+  return c.json({ customer })
+})
+
+account.post("/forgot", async (c) => {
+  const { email } = await readJson(c, ForgotPassword)
+  const reset = await createPasswordReset(c.env.DB, email)
+  if (reset) {
+    const link = `${c.env.PUBLIC_URL.replace(/\/+$/, "")}/reset-password/${reset.token}`
+    await sendPasswordResetEmail(c.env, reset.customer.email, reset.customer.name, link)
+  }
+  return c.json({ message: "If that email has an account, we've sent a link to reset the password." })
+})
+
+account.post("/reset", async (c) => {
+  const { token, password } = await readJson(c, ResetPassword)
+  const customer = await resetPassword(c.env.DB, token, password)
+  if (!customer) return c.json({ message: "This link has expired or was already used. Ask for a new one." }, 400)
   await startSession(c, "customer", customer.id)
   return c.json({ customer })
 })

@@ -1,6 +1,7 @@
 import { HTTPException } from "hono/http-exception"
 import { newApp } from "./app.ts"
 import { bayseHealthCheck } from "./bayse.ts"
+import { syncRecentPayments } from "./payments.ts"
 import { account } from "./routes/account.ts"
 import { admin } from "./routes/admin.ts"
 import { checkout } from "./routes/checkout.ts"
@@ -45,4 +46,11 @@ app.onError((error, c) => {
   return c.json({ message: "Something went wrong. Please try again." }, 500)
 })
 
-export default app
+export { app }
+
+export default {
+  fetch: app.fetch,
+  scheduled: (_controller, env, ctx) => {
+    ctx.waitUntil(syncRecentPayments(env))
+  }
+} satisfies ExportedHandler<Env>

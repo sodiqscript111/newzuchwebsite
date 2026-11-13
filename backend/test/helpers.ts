@@ -1,5 +1,5 @@
 import { env } from "cloudflare:workers"
-import app from "../src/index.ts"
+import { app } from "../src/index.ts"
 import { hmacHex } from "../src/lib/crypto.ts"
 
 export type TestEnv = typeof env

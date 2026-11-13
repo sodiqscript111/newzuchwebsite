@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import StoreNavigation from '../StoreNavigation/StoreNavigation';
 import ProductCard from '../ProductCard/ProductCard';
 import { ProductContext } from "../../context/productContext";
+import { useInfiniteList } from "../../hooks/useInfiniteList";
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import '../Home/home.css';
@@ -25,6 +26,8 @@ const AllProducts = () => {
         )
       : products.filter(product => product.collectionId === collectionId)
     : products;
+
+  const { visible, hasMore, sentinelRef, loadMore } = useInfiniteList(filteredProducts, { resetKey: collectionId });
 
   const videoRef = useRef(null);
 
@@ -76,7 +79,7 @@ const AllProducts = () => {
           {filteredProducts.length === 0 ? (
             <p>No products available.</p>
           ) : (
-            filteredProducts.map((product) => (
+            visible.map((product) => (
               <ProductCard
                 key={`${product.collectionId}-${product.id}`}
                 id={product.id}
@@ -88,6 +91,11 @@ const AllProducts = () => {
             ))
           )}
         </div>
+        {hasMore && (
+          <div ref={sentinelRef} className="loadMore">
+            <button type="button" onClick={loadMore}>Show more products</button>
+          </div>
+        )}
       </main>
     </div>
   );

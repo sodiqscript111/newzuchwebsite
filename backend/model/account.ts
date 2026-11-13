@@ -12,6 +12,15 @@ export const Login = z.object({
   password: z.string().min(1, "Enter your password").max(200)
 })
 
+export const ForgotPassword = z.object({
+  email: z.email("Enter a valid email").max(200)
+})
+
+export const ResetPassword = z.object({
+  token: z.string().min(10).max(200),
+  password: z.string().min(8, "Use at least 8 characters").max(200)
+})
+
 export const AdminLogin = z.object({
   password: z.string().min(1).max(200)
 })

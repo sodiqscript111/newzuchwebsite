@@ -3,9 +3,16 @@
   "name": "zuch",
   "main": "src/index.ts",
   "compatibility_date": "2026-11-01",
+  "triggers": {
+    "crons": ["*/10 * * * *"]
+  },
   "observability": {
     "enabled": true
   },
+  "routes": [
+    { "pattern": "zuch.com.ng", "custom_domain": true },
+    { "pattern": "www.zuch.com.ng", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./public",
     "not_found_handling": "single-page-application",
@@ -15,7 +22,7 @@
     {
       "binding": "DB",
       "database_name": "zuch",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "26d8ff0c-e30f-4d84-bf7f-4a2d28a33dd8",
       "migrations_dir": "migrations"
     }
   ],
@@ -27,7 +34,9 @@
   ],
   "vars": {
     "ENVIRONMENT": "production",
-    "PUBLIC_URL": "",
+    "PUBLIC_URL": "https://zuch.com.ng",
+    "EMAIL_FROM": "Zuch <orders@zuch.com.ng>",
+    "OWNER_EMAIL": "Zuchstitches@gmail.com",
     "BAYSE_URL": "https://relay.bayse.markets"
   }
 }

@@ -13,6 +13,7 @@ import Elegant from "./Components/Elegant/elegant";
 import OrderPage from "./Components/Orders/OrderPage";
 import TrackOrder from "./Components/Orders/TrackOrder";
 import Account from "./Components/Account/Account";
+import { ForgotPassword, ResetPassword } from "./Components/Account/PasswordReset";
 import Landing from "./Components/Landing/Landing";
 import Layout from "./Components/Layout/Layout";
 import { ProductProvider } from "./context/productContext";
@@ -35,6 +36,8 @@ const router = createBrowserRouter([
       { path: "/orders/:number", element: <OrderPage /> },
       { path: "/track", element: <TrackOrder /> },
       { path: "/account", element: <Account /> },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      { path: "/reset-password/:token", element: <ResetPassword /> },
       { path: "/elegant", element: <Elegant /> },
       { path: "/contact", element: <Contact /> },
       { path: "/about", element: <About /> },

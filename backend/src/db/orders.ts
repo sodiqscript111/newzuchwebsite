@@ -227,14 +227,14 @@ const PAYABLE: ReadonlyArray<OrderStatus> = ["awaiting_payment", "payment_failed
 export const markOrderPaid = async (db: D1Database, row: OrderRow, paymentId: string | null) => {
   if (!PAYABLE.includes(row.status)) return false
   const now = nowIso()
-  await db
+  const result = await db
     .prepare(
       `UPDATE orders SET status = 'paid', paid_at = ?, payment_id = COALESCE(?, payment_id), updated_at = ?
        WHERE id = ? AND status IN ('awaiting_payment', 'payment_failed', 'expired')`
     )
     .bind(now, paymentId, now, row.id)
     .run()
-  return true
+  return result.meta.changes > 0
 }
 
 export const markOrderUnpaid = async (db: D1Database, row: OrderRow, status: "payment_failed" | "expired") => {
@@ -251,3 +251,11 @@ export const addOrderNote = (db: D1Database, row: OrderRow, line: string) =>
     .prepare("UPDATE orders SET note = ?, updated_at = ? WHERE id = ?")
     .bind(row.note ? `${row.note}\n${line}` : line, nowIso(), row.id)
     .run()
+
+export const listAwaitingPayment = async (db: D1Database, since: string) => {
+  const { results } = await db
+    .prepare("SELECT number FROM orders WHERE status = 'awaiting_payment' AND created_at >= ? ORDER BY created_at LIMIT 100")
+    .bind(since)
+    .all<{ number: string }>()
+  return results.map((row) => row.number)
+}

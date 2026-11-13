@@ -1,6 +1,7 @@
 import { html } from "hono/html"
 import { newApp } from "../app.ts"
-import { findOrderRow, markOrderPaid, markOrderUnpaid } from "../db/orders.ts"
+import { findOrderRow, markOrderUnpaid } from "../db/orders.ts"
+import { confirmPaid } from "../payments.ts"
 
 export const dev = newApp()
 
@@ -41,7 +42,7 @@ dev.get("/checkout/:orderId", async (c) => {
 dev.post("/checkout/:orderId/:result", async (c) => {
   const order = await findOrderRow(c.env.DB, { id: c.req.param("orderId") })
   if (!order) return c.notFound()
-  if (c.req.param("result") === "paid") await markOrderPaid(c.env.DB, order, "dev")
+  if (c.req.param("result") === "paid") await confirmPaid(c.env, order, "dev")
   else await markOrderUnpaid(c.env.DB, order, "payment_failed")
   return c.redirect(`${safeReturn(c.req.query("return"))}?reference=dev`, 303)
 })

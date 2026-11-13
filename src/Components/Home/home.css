@@ -124,3 +124,25 @@
     backdrop-filter: blur(5px);
   }
 }
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 40px;
+}
+
+.loadMore button {
+  min-height: 44px;
+  padding: 0 24px;
+  border: 0.5px solid #000;
+  background: #fff;
+  color: #000;
+  font: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.loadMore button:hover {
+  background: #000;
+  color: #fff;
+}

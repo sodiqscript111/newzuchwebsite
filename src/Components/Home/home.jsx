@@ -4,11 +4,13 @@ import { ProductContext } from '../../context/productContext';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import ProductCard from '../ProductCard/ProductCard';
+import { useInfiniteList } from '../../hooks/useInfiniteList';
 import './home.css';
 
 const Home = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { products, loading } = useContext(ProductContext);
+  const { visible, hasMore, sentinelRef, loadMore } = useInfiniteList(products);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const Home = () => {
 
       <main className="mainContent">
         <div className="productGrid">
-          {products.map((product) => (
+          {visible.map((product) => (
             <ProductCard
               key={`${product.collectionId}-${product.id}`}
               id={product.id}
@@ -69,6 +71,11 @@ const Home = () => {
             />
           ))}
         </div>
+        {hasMore && (
+          <div ref={sentinelRef} className="loadMore">
+            <button type="button" onClick={loadMore}>Show more products</button>
+          </div>
+        )}
       </main>
     </div>
   );

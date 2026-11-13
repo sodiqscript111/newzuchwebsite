@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { api } from "../../api";
 import OrderDetails from "./OrderDetails";
 import "../../styles/shop-pages.css";
 
 const TrackOrder = () => {
-  const [form, setForm] = useState({ number: "", email: "" });
+  const [searchParams] = useSearchParams();
+  const [form, setForm] = useState({ number: searchParams.get("number") ?? "", email: "" });
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);

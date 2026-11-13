@@ -8,3 +8,6 @@ ADMIN_PASSWORD=change-me-locally
 PAYSTACK_SECRET_KEY=
 # The webhook signing secret (whsec_...) from Developers > API configuration, if you have one.
 PAYSTACK_WEBHOOK_SECRET=
+
+# Leave empty locally to skip sending emails.
+RESEND_API_KEY=
